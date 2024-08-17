@@ -23,13 +23,12 @@ public class SecurityConfig {
             .csrf(csrf -> csrf.disable()) // Deshabilita CSRF solo para pruebas
             .authorizeHttpRequests(authorizeRequests ->
                 authorizeRequests
-                    .requestMatchers("/api/auth/login").permitAll() // Permite acceso al login
-                    .requestMatchers("/register").permitAll() // Permite acceso al registro
+                    .requestMatchers("/auth/**").permitAll() // Permite acceso al login
                     .anyRequest().authenticated() // Requiere autenticación para cualquier otra solicitud
             )
             .formLogin(formLogin ->
                 formLogin
-                    .loginProcessingUrl("/api/auth/login") // No debería redirigir
+                    .loginProcessingUrl("/auth/login") // No debería redirigir
                     .disable() // Deshabilita el formulario de inicio de sesión predeterminado
             )
             .logout(logout ->
