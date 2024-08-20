@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.api.api.DTO.ProductoDto;
 import com.api.api.dominio.Producto;
-import com.api.api.service.ProductoService;
+import com.api.api.service.Interfaces.ProductoService;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;

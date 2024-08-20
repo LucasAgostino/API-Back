@@ -5,7 +5,7 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
+import com.api.api.service.Interfaces.ProductoService;
 import com.api.api.DTO.ProductoDto;
 import com.api.api.dominio.Categoria;
 import com.api.api.dominio.Producto;
@@ -15,7 +15,7 @@ import com.api.api.repository.UsuarioRepository;
 import com.api.api.repository.CategoriaRepository;
 
 @Service
-public class ProductoService {
+public class ProductoServiceImpl implements ProductoService{
     @Autowired
     private ProductoRepository productoRepository;
 
