@@ -1,10 +1,12 @@
 package com.api.api.service;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.api.api.DTO.ProductoDto;
 import com.api.api.dominio.Categoria;
 import com.api.api.dominio.Producto;
 import com.api.api.dominio.Usuario;
@@ -35,9 +37,17 @@ public class ProductoService {
         return productoRepository.save(producto);
     }
 
-    public List<Producto> getProducto() {
-        List<Producto> productos = productoRepository.findAll();
+    public List<ProductoDto> getProducto() {
+        List<ProductoDto> productos = productoRepository.findAllProductos();
         return productos;
+    }
+
+    public Optional<Producto> findById(Long productoId) {
+        return productoRepository.findById(productoId);
+    }
+
+    public List<ProductoDto> getProductosPorCategoria(Long categoriaId) {
+        return productoRepository.findAllProductosByCategoria(categoriaId);
     }
     
 }
