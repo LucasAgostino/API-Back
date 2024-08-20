@@ -1,5 +1,7 @@
 package com.api.api.service;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -32,4 +34,10 @@ public class ProductoService {
 
         return productoRepository.save(producto);
     }
+
+    public List<Producto> getProducto() {
+        List<Producto> productos = productoRepository.findAll();
+        return productos;
+    }
+    
 }
