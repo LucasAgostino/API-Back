@@ -25,6 +25,7 @@ public class SecurityConfig {
                 authorizeRequests
                     .requestMatchers("/api/auth/login").permitAll() // Permite acceso al login
                     .requestMatchers("/register").permitAll() // Permite acceso al registro
+                    .requestMatchers("/**").permitAll()
                     .anyRequest().authenticated() // Requiere autenticación para cualquier otra solicitud
             )
             .formLogin(formLogin ->
