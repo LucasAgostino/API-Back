@@ -30,7 +30,7 @@ public class SecurityConfig {
             )
             .formLogin(formLogin ->
                 formLogin
-                    .loginProcessingUrl("/api/auth/login") // No debería redirigir
+                    .loginProcessingUrl("/auth/login") // No debería redirigir
                     .disable() // Deshabilita el formulario de inicio de sesión predeterminado
             )
             .logout(logout ->
