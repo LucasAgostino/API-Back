@@ -46,4 +46,7 @@ public class Producto {
     @ManyToOne
     @JoinColumn(name = "categoria_id")
     private Categoria categoria;
+
+    @Column
+    private Boolean estado=true;
 }
