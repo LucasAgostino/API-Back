@@ -5,11 +5,14 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.api.api.dominio.Carrito;
 import com.api.api.dominio.Usuario;
+import com.api.api.repository.CarritoRepository;
 import com.api.api.repository.UsuarioRepository;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.time.LocalDateTime;
 
 @Service
 @Transactional
@@ -20,6 +23,9 @@ public class UsuarioService {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private CarritoRepository carritoRepository;
 
     public Usuario registrarUsuario(Usuario usuario, List<String> roles) {
         // Verificar unicidad del nombre de usuario
@@ -40,10 +46,19 @@ public class UsuarioService {
             roles = new ArrayList<>();
         }
         usuario.setRoles(roles);
-
+        
         // Guardar usuario
-        return usuarioRepository.save(usuario);
-    }
+        Usuario savedUsuario = usuarioRepository.save(usuario);
+
+        // Crear un carrito vacío y asociarlo al usuario guardado
+        Carrito carrito = new Carrito();
+        carrito.setUsuario(savedUsuario); // Usa el usuario guardado
+        carrito.setFechaCreacion(LocalDateTime.now());
+
+        carritoRepository.save(carrito); // Guarda el carrito
+
+        return savedUsuario;
+        }
 
     public Usuario autenticarUsuario(String username, String password) {
         Usuario usuario = usuarioRepository.findByNombreUsuario(username);
