@@ -32,10 +32,6 @@ public class CarritoServiceImpl implements CarritoService {
         }
         
         Optional<Carrito> carritoOpt = carritoRepository.findByUsuarioId(idUsuario);
-        if (!carritoOpt.isPresent()) {
-            return "Carrito no encontrado para el usuario";
-        }
-        
         Producto producto = productoOpt.get();
         Carrito carrito = carritoOpt.get();
         
@@ -43,6 +39,9 @@ public class CarritoServiceImpl implements CarritoService {
         if (carritoproductoOpt.isPresent()) {
             CarritoProducto carritoProducto = carritoproductoOpt.get();
             int stockViejo = carritoProducto.getCantidad();
+            if(!VerificarStock(producto, stockViejo + cantidad)){
+                return "No hay suficiente stock";
+            }
             carritoProducto.setCantidad(stockViejo + cantidad); // Usar setCantidad en lugar de Setcantidad
             carritoProducto.setPrecioTotal(producto.getPrecio() * (stockViejo + cantidad)); // Actualizar precio total
             carritoProductoRepository.save(carritoProducto); // Guardar los cambios
@@ -50,12 +49,21 @@ public class CarritoServiceImpl implements CarritoService {
         }
         
         CarritoProducto nuevoCarritoProducto = new CarritoProducto();
+        if(!VerificarStock(producto, cantidad)){
+            return "No hay suficiente stock";
+        }
         nuevoCarritoProducto.setCantidad(cantidad);
         nuevoCarritoProducto.setCarrito(carrito);
         nuevoCarritoProducto.setProducto(producto);
         nuevoCarritoProducto.setPrecioTotal(producto.getPrecio() * cantidad);
         carritoProductoRepository.save(nuevoCarritoProducto);
         return "Producto agregado al carrito";
+    }
+    private boolean VerificarStock(Producto producto, int cantidad){
+        if(producto.getStock() >= cantidad){
+            return true;
+        }
+        return false;
     }
 }
 
