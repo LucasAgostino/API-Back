@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
+import com.api.api.service.Interfaces.UsuarioService;
 import com.api.api.dominio.Carrito;
 import com.api.api.dominio.Usuario;
 import com.api.api.repository.CarritoRepository;
@@ -16,7 +16,7 @@ import java.time.LocalDateTime;
 
 @Service
 @Transactional
-public class UsuarioService {
+public class UsuarioServiceImpl implements UsuarioService {
 
     @Autowired
     private UsuarioRepository usuarioRepository;

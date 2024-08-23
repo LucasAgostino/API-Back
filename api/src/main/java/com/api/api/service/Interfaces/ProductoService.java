@@ -16,4 +16,5 @@ public interface ProductoService {
 
     public List<ProductoDto> getProductosPorCategoria(Long categoriaId);
     
+    public List<ProductoDto> findByPrecioBetween(Float precioMin, Float precioMax);
 }

@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.api.api.DTO.ProductoDto;
@@ -46,5 +47,11 @@ public class ProductoController {
     @GetMapping("/get/cat/{categoria}")
     public List<ProductoDto> getporCategoria(@PathVariable("categoria") Long categoriaId) {
         return productoService.getProductosPorCategoria(categoriaId);
+    }
+
+    @GetMapping("/filtrar")
+    public List<ProductoDto> filtrarProductosPorPrecio(@RequestParam(required = false) Float precioMin,
+                                                    @RequestParam(required = false) Float precioMax) {
+        return productoService.findByPrecioBetween(precioMin, precioMax);
     }
 }

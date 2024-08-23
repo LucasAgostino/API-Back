@@ -11,14 +11,14 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.api.api.DTO.UsuarioDto;
 import com.api.api.dominio.Usuario;
-import com.api.api.service.UsuarioService;
+import com.api.api.service.UsuarioServiceImpl;
 
 @Controller
 @RequestMapping("/auth")
 public class AuthController {
 
     @Autowired
-    private UsuarioService usuarioService;
+    private UsuarioServiceImpl usuarioService;
 
     @GetMapping
     public String showRegistrationForm() {

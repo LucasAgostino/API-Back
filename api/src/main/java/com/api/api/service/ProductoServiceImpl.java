@@ -5,6 +5,8 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import com.api.api.service.DAO.ProductoDao;
 import com.api.api.service.Interfaces.ProductoService;
 import com.api.api.DTO.ProductoDto;
 import com.api.api.dominio.Categoria;
@@ -16,6 +18,9 @@ import com.api.api.repository.CategoriaRepository;
 
 @Service
 public class ProductoServiceImpl implements ProductoService{
+    @Autowired
+    private ProductoDao productoDao;
+
     @Autowired
     private ProductoRepository productoRepository;
 
@@ -38,8 +43,7 @@ public class ProductoServiceImpl implements ProductoService{
     }
 
     public List<ProductoDto> getProducto() {
-        List<ProductoDto> productos = productoRepository.findAllProductos();
-        return productos;
+        return productoDao.findAll();
     }
 
     public Optional<Producto> findById(Long productoId) {
@@ -47,7 +51,10 @@ public class ProductoServiceImpl implements ProductoService{
     }
 
     public List<ProductoDto> getProductosPorCategoria(Long categoriaId) {
-        return productoRepository.findAllProductosByCategoria(categoriaId);
+        return productoDao.getProductosPorCategoria(categoriaId);
     }
     
+    public List<ProductoDto> findByPrecioBetween(Float precioMin, Float precioMax) { 
+        return productoDao.findByPrecioBetween(precioMin, precioMax);
+    }
 }
