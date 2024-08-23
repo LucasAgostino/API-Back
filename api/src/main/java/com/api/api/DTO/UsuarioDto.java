@@ -1,6 +1,5 @@
 package com.api.api.DTO;
 
-import java.util.List;
 
 import lombok.Data;
 
@@ -11,7 +10,7 @@ public class UsuarioDto {
     private String contrasena;
     private String nombre;
     private String apellido;
-    private List<String> roles;
+    private String rol;
 
 }
 

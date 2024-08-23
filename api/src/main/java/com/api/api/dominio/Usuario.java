@@ -33,17 +33,16 @@ public class Usuario {
 
     private String apellido;
     
-    @ElementCollection
-    @Column(name = "roles")
-    private List<String> roles;
+    @Column(name = "rol")
+    private String rol;
 
     // Puedes agregar un constructor con parámetros si lo necesitas
-    public Usuario(String nombreUsuario, String mail, String contrasena, String nombre, String apellido, List<String> roles) {
+    public Usuario(String nombreUsuario, String mail, String contrasena, String nombre, String apellido, String rol) {
         this.nombreUsuario = nombreUsuario;
         this.mail = mail;
         this.contrasena = contrasena;
         this.nombre = nombre;
         this.apellido = apellido;
-        this.roles = roles;
+        this.rol = rol;
     }
 }

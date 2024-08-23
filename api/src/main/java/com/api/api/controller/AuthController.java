@@ -33,11 +33,11 @@ public class AuthController {
             usuarioDto.getContrasena(),
             usuarioDto.getNombre(),
             usuarioDto.getApellido(),
-            usuarioDto.getRoles()
+            usuarioDto.getRol()
             );
 
         try {
-            usuarioService.registrarUsuario(usuario, usuarioDto.getRoles());
+            usuarioService.registrarUsuario(usuario, usuarioDto.getRol());
             return ResponseEntity.ok("Usuario registrado exitosamente"); // Respuesta exitosa
         } catch (Exception e) {
             return ResponseEntity.status(500).body("Error al registrar el usuario"); // Respuesta de error
