@@ -42,6 +42,20 @@ public class ProductoServiceImpl implements ProductoService{
         return productoRepository.save(producto);
     }
 
+    public Producto darBajaProducto(Long productoId){
+        Producto producto = productoRepository.findById(productoId)
+                .orElseThrow(() -> new RuntimeException("Producto not found"));
+        producto.setEstado(false);
+        return productoRepository.save(producto);
+    }
+
+    public Producto modificarStockProducto(Long productoId, int cantidad){
+        Producto producto = productoRepository.findById(productoId)
+                .orElseThrow(() -> new RuntimeException("Producto not found"));
+        producto.setStock(cantidad);
+        return productoRepository.save(producto);
+    }
+
     public List<ProductoDto> getProducto() {
         return productoDao.findAll();
     }

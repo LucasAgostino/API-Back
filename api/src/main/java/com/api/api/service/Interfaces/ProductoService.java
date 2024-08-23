@@ -10,6 +10,10 @@ public interface ProductoService {
     
     public Producto crearProducto(Producto producto);
 
+    public Producto darBajaProducto(Long productoId);
+
+    public Producto modificarStockProducto(Long productoId, int cantidad);
+
     public List<ProductoDto> getProducto();
 
     public Optional<Producto> findById(Long productoId);

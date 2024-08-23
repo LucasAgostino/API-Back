@@ -30,6 +30,18 @@ public class ProductoController {
     public Producto postMethodName(@RequestBody Producto producto) { 
         return productoService.crearProducto(producto);
     }
+
+    // Realiza una baja logica de un producto
+    @PostMapping("/delete/{id}")
+    public Producto darBajaProducto(@PathVariable("id") Long productoId) {
+        return productoService.darBajaProducto(productoId);
+    }
+
+    // Modifica el stock de un producto
+    @PostMapping("/update/{id}")
+    public Producto modificarStockProducto(@PathVariable("id") Long productoId, @RequestParam int cantidad) {
+        return productoService.modificarStockProducto(productoId, cantidad);
+    }
     
     // Trae unicamente el id, nombre, precio y foto
     @GetMapping("/get")
@@ -49,6 +61,7 @@ public class ProductoController {
         return productoService.getProductosPorCategoria(categoriaId);
     }
 
+    // Muestra filtrado todos los productos por precio
     @GetMapping("/filtrar")
     public List<ProductoDto> filtrarProductosPorPrecio(@RequestParam(required = false) Float precioMin,
                                                     @RequestParam(required = false) Float precioMax) {

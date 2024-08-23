@@ -20,7 +20,7 @@ public class ProductoDao {
 
     @Transactional(readOnly = true)
     public List<ProductoDto> findAll() {
-        List<Producto> productos = productoRepository.findAll();
+        List<Producto> productos = productoRepository.findAllProductosActivos();
         return productos.stream().map(this::convertToDTO).collect(Collectors.toList());    
     }
 
