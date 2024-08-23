@@ -1,7 +1,7 @@
 package com.api.api.service;
 
-import java.util.Optional;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -26,6 +26,7 @@ public class CarritoServiceImpl implements CarritoService {
     @Autowired
     private CarritoProductoRepository carritoProductoRepository;
 
+    @Override
     public String AgregarProducto(Long idProducto, Long idUsuario, int cantidad) {
         Producto producto = getProducto(idProducto);
         
@@ -56,6 +57,8 @@ public class CarritoServiceImpl implements CarritoService {
         carritoProductoRepository.save(nuevoCarritoProducto);
         return "Producto agregado al carrito";
     }
+    
+    @Override
     public List<CarritoProducto> findByCarrito(Long idUsuario){
         Optional<Carrito> carrito = carritoRepository.findByUsuarioId(idUsuario);
         Carrito carrito2 = carrito.get();
@@ -63,6 +66,7 @@ public class CarritoServiceImpl implements CarritoService {
         return productos;
     }
 
+    @Override
     public String eliminarProducto(Long idProducto, Long idUsuario) {
         Optional<Producto> productoOpt = productoRepository.findById(idProducto);
         if (!productoOpt.isPresent()) {
@@ -81,6 +85,7 @@ public class CarritoServiceImpl implements CarritoService {
         return "Producto no encontrado en el carrito";
     }
 
+    @Override
     public String restarCarrito(Long idUsuario, Long idProducto, int cantidad) {
         Optional<Carrito> carritoOpt = carritoRepository.findByUsuarioId(idUsuario);
         
@@ -123,10 +128,7 @@ public class CarritoServiceImpl implements CarritoService {
     }
 
     private boolean VerificarStock(Producto producto, int cantidad){
-        if(producto.getStock() >= cantidad){
-            return true;
-        }
-        return false;
+        return producto.getStock() >= cantidad;
     }
 }
 

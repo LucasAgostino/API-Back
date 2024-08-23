@@ -1,18 +1,19 @@
 package com.api.api.service;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import com.api.api.service.Interfaces.UsuarioService;
+
 import com.api.api.dominio.Carrito;
 import com.api.api.dominio.Usuario;
 import com.api.api.repository.CarritoRepository;
 import com.api.api.repository.UsuarioRepository;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.time.LocalDateTime;
+import com.api.api.service.Interfaces.UsuarioService;
 
 @Service
 @Transactional
@@ -27,6 +28,7 @@ public class UsuarioServiceImpl implements UsuarioService {
     @Autowired
     private CarritoRepository carritoRepository;
 
+    @Override
     public Usuario registrarUsuario(Usuario usuario, List<String> roles) {
         // Verificar unicidad del nombre de usuario
         if (usuarioRepository.existsByNombreUsuario(usuario.getNombreUsuario())) {
@@ -60,6 +62,7 @@ public class UsuarioServiceImpl implements UsuarioService {
         return savedUsuario;
         }
 
+    @Override
     public Usuario autenticarUsuario(String username, String password) {
         Usuario usuario = usuarioRepository.findByNombreUsuario(username);
         if (usuario != null) {
@@ -73,6 +76,8 @@ public class UsuarioServiceImpl implements UsuarioService {
         }
     }
 
+    
+    @Override
     public void asignarRol(String nombreUsuario, String rolNombre) {
         Usuario usuario = usuarioRepository.findByNombreUsuario(nombreUsuario);
         if (usuario != null) {
@@ -89,6 +94,7 @@ public class UsuarioServiceImpl implements UsuarioService {
         }
     }
 
+    @Override
     public List<Usuario> findAll() {
         return usuarioRepository.findAll();
     }
