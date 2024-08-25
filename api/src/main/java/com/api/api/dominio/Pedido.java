@@ -1,6 +1,6 @@
 package com.api.api.dominio;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -31,7 +31,7 @@ public class Pedido {
     private Usuario usuario;
 
     @Column(name = "fecha_pedido", nullable = false)
-    private Date fechaPedido;
+    private LocalDateTime fechaPedido;
 
     @Column(name = "total_pedido", nullable = false)
     private float totalPedido;

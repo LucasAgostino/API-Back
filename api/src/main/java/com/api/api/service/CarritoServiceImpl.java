@@ -1,5 +1,6 @@
 package com.api.api.service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -8,11 +9,16 @@ import org.springframework.stereotype.Service;
 
 import com.api.api.dominio.Carrito;
 import com.api.api.dominio.CarritoProducto;
+import com.api.api.dominio.Pedido;
 import com.api.api.dominio.Producto;
+import com.api.api.dominio.Usuario;
 import com.api.api.repository.CarritoProductoRepository;
 import com.api.api.repository.CarritoRepository;
 import com.api.api.repository.ProductoRepository;
+import com.api.api.repository.UsuarioRepository;
 import com.api.api.service.Interfaces.CarritoService;
+import com.api.api.service.Interfaces.PedidoProductoService;
+import com.api.api.service.Interfaces.PedidoService;
 
 @Service
 public class CarritoServiceImpl implements CarritoService {
@@ -26,6 +32,27 @@ public class CarritoServiceImpl implements CarritoService {
     @Autowired
     private CarritoProductoRepository carritoProductoRepository;
 
+    @Autowired
+    private UsuarioRepository usuarioRepository;
+
+    @Autowired
+    private PedidoService pedidoService;
+
+    @Autowired
+    private PedidoProductoService pedidoProductoService;
+
+    @Override
+    public void crearCarrito(Long idUsuario) {
+        Optional<Usuario> usuarioOpt = usuarioRepository.findById(idUsuario);
+        if (!usuarioOpt.isPresent()) {
+            throw new RuntimeException("Usuario no encontrado");
+        }
+        Usuario usuario = usuarioOpt.get();
+        Carrito carrito = new Carrito();
+        carrito.setUsuario(usuario);
+        carrito.setFechaCreacion(LocalDateTime.now());
+        carritoRepository.save(carrito);
+    }
     @Override
     public String AgregarProducto(Long idProducto, Long idUsuario, int cantidad) {
         Producto producto = getProducto(idProducto);
@@ -118,6 +145,50 @@ public class CarritoServiceImpl implements CarritoService {
         return "Producto restado del carrito exitosamente.";
     }
     
+    public void realizarPedido(Long idUsuario) {
+        Optional<Carrito> carritoOpt = carritoRepository.findByUsuarioId(idUsuario);
+        
+        if (carritoOpt.isEmpty()) {
+            throw new RuntimeException("Carrito no encontrado para el usuario con ID: " + idUsuario);
+        }
+        
+        Carrito carrito = carritoOpt.get();
+        List<CarritoProducto> productos = carritoProductoRepository.findByCarrito(carrito);
+        
+        if (productos.isEmpty()) {
+            throw new RuntimeException("El carrito está vacío. No se puede realizar un pedido sin productos.");
+        }
+    
+        float totalPedido = 0;
+    
+        // Verificar stock de todos los productos del carrito
+        for (CarritoProducto carritoProducto : productos) {
+            Producto producto = carritoProducto.getProducto();
+            int cantidad = carritoProducto.getCantidad();
+            
+            if (!VerificarStock(producto, cantidad)) {
+                throw new RuntimeException("No hay suficiente stock para el producto: " + producto.getNombreProducto());
+            }
+            
+            totalPedido += carritoProducto.getPrecioTotal();
+        }
+
+        Pedido pedido = pedidoService.crearPedido(idUsuario, totalPedido);
+
+        for (CarritoProducto carritoProducto : productos) {
+            Producto producto = carritoProducto.getProducto();
+            int cantidad = carritoProducto.getCantidad();
+            
+            // Update the product stock
+            producto.setStock(producto.getStock() - cantidad);
+            productoRepository.save(producto);
+            pedidoProductoService.AgregarProducto(pedido.getIdPedido(), producto.getProductoId(), cantidad);
+        }             
+        carritoProductoRepository.deleteAll(productos);
+        vaciarCarrito(carrito);    
+    }
+            
+    
     // Funciones Privadas
     private Producto getProducto(Long idProducto){
         Optional<Producto> productoOpt = productoRepository.findById(idProducto);
@@ -129,6 +200,11 @@ public class CarritoServiceImpl implements CarritoService {
 
     private boolean VerificarStock(Producto producto, int cantidad){
         return producto.getStock() >= cantidad;
+    }
+
+    private void vaciarCarrito(Carrito carrito) {
+        carrito.getCarritoProductos().clear();
+        carritoRepository.save(carrito);
     }
 }
 

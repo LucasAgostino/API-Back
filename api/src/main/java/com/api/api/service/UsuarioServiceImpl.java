@@ -1,6 +1,5 @@
 package com.api.api.service;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -9,11 +8,10 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import com.api.api.DTO.UsuarioDto;
-import com.api.api.dominio.Carrito;
 import com.api.api.dominio.Usuario;
-import com.api.api.repository.CarritoRepository;
 import com.api.api.repository.UsuarioRepository;
 import com.api.api.service.DAO.UsuarioDAO;
+import com.api.api.service.Interfaces.CarritoService;
 import com.api.api.service.Interfaces.UsuarioService;
 
 @Service
@@ -30,7 +28,7 @@ public class UsuarioServiceImpl implements UsuarioService {
     private PasswordEncoder passwordEncoder;
 
     @Autowired
-    private CarritoRepository carritoRepository;
+    private CarritoService carritoService;
 
     @Override
     public Usuario registrarUsuario(Usuario usuario, String rol) {
@@ -53,12 +51,7 @@ public class UsuarioServiceImpl implements UsuarioService {
         // Guardar usuario
         Usuario savedUsuario = usuarioRepository.save(usuario);
 
-        // Crear un carrito vacío y asociarlo al usuario guardado
-        Carrito carrito = new Carrito();
-        carrito.setUsuario(savedUsuario); // Usa el usuario guardado
-        carrito.setFechaCreacion(LocalDateTime.now());
-
-        carritoRepository.save(carrito); // Guarda el carrito
+        carritoService.crearCarrito(savedUsuario.getId());
 
         return savedUsuario;
         }

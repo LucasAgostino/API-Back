@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.api.api.DTO.UsuarioDto;
-import com.api.api.dominio.Usuario;
 import com.api.api.service.Interfaces.UsuarioService;
 
 @RestController

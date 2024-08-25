@@ -51,5 +51,10 @@ public class CarritoController {
         String mensaje = carritoService.restarCarrito(idUsuario, idProducto, cantidad);
         return ResponseEntity.ok(mensaje);
     }
+
+    @PostMapping("/vaciar")
+    public void vaciarCarrito(@RequestParam Long idUsuario) {
+        carritoService.realizarPedido(idUsuario);
+    }
         
 }
