@@ -8,5 +8,7 @@ import com.api.api.dominio.Categoria;
 @Repository
 public interface CategoriaRepository extends JpaRepository<Categoria, Long> {
 
+    boolean existsByNombreCategoria(String nombreCategoria);
+
     
 }
