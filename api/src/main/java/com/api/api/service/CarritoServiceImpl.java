@@ -2,13 +2,13 @@ package com.api.api.service;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.ArrayList;
 import java.util.Optional;
 
-import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.api.api.DTO.CarritoDto;
+import com.api.api.DTO.CarritoProductoDto;
 import com.api.api.dominio.Carrito;
 import com.api.api.dominio.CarritoProducto;
 import com.api.api.dominio.Pedido;
@@ -71,6 +71,7 @@ public class CarritoServiceImpl implements CarritoService {
             }
             carritoProductoExistente.setCantidad(stockViejo + cantidad);
             carritoProductoExistente.setPrecioTotal(producto.getPrecio() * (stockViejo + cantidad));
+            carritoProductoRepository.save(carritoProductoExistente);
         } else {
             CarritoProducto nuevoCarritoProducto = new CarritoProducto();
             if (!VerificarStock(producto, cantidad)) {
@@ -103,9 +104,43 @@ public class CarritoServiceImpl implements CarritoService {
         }
     }
 
-    public String restarCarrito(Long idUsuario, Long idProducto, int cantidad){
-        return "Producto restado del carrito";
-    };
+    @Override
+    public String restarCarrito(Long idUsuario, Long idProducto, int cantidad) {
+        // Obtener el carrito del usuario
+        Optional<Carrito> carritoOpt = carritoRepository.findByUsuarioId(idUsuario);
+        Carrito carrito = carritoOpt.orElseThrow(() -> new RuntimeException("Carrito no encontrado"));
+
+        // Obtener el producto en el carrito
+        Producto producto = getProducto(idProducto);
+        CarritoProducto carritoProductoExistente = carritoProductoRepository.findByCarritoAndProducto(carrito, producto);
+
+        if (carritoProductoExistente != null) {
+            int cantidadActual = carritoProductoExistente.getCantidad();
+
+            // Verificar si la cantidad a restar es válida
+            if (cantidadActual < cantidad) {
+                return "No se puede restar más cantidad de la que hay en el carrito";
+            }
+
+            // Restar la cantidad
+            int nuevaCantidad = cantidadActual - cantidad;
+
+            if (nuevaCantidad > 0) {
+                // Actualizar la cantidad y el precio total
+                carritoProductoExistente.setCantidad(nuevaCantidad);
+                carritoProductoExistente.setPrecioTotal(producto.getPrecio() * nuevaCantidad);
+                carritoProductoRepository.save(carritoProductoExistente);
+            } else {
+                // Si la nueva cantidad es 0 o menor, eliminar el producto del carrito
+                carritoProductoRepository.delete(carritoProductoExistente);
+            }
+
+            return "Producto restado del carrito";
+        }
+
+        return "Producto no encontrado en el carrito";
+    }
+
 
     @Override
     public void realizarPedido(Long idUsuario) {
@@ -146,12 +181,30 @@ public class CarritoServiceImpl implements CarritoService {
     }
   
     @Override
-    public List<CarritoProducto> findByCarrito(Long idUsuario) {
+    public CarritoDto findByCarrito(Long idUsuario) {
         Optional<Carrito> carritoOpt = carritoRepository.findByUsuarioId(idUsuario);
         Carrito carrito = carritoOpt.orElseThrow(() -> new RuntimeException("Carrito no encontrado"));
 
-        return carritoProductoRepository.findByCarrito(carrito);
-    }
+        List<CarritoProducto> productos = carritoProductoRepository.findByCarrito(carrito);
+        
+        List<CarritoProductoDto> productosDTO = productos.stream()
+                .map(producto -> {
+                    CarritoProductoDto dto = new CarritoProductoDto();
+                    dto.setIdCarritoProducto(producto.getIdCarritoProducto());
+                    dto.setProducto(producto.getProducto());
+                    dto.setCantidad(producto.getCantidad());
+                    dto.setPrecioTotal(producto.getPrecioTotal());
+                    return dto;
+                })
+                .toList();
+
+        CarritoDto response = new CarritoDto();
+        response.setIdCarrito(carrito.getIdCarrito());
+        response.setProductos(productosDTO);
+
+        return response;
+}
+
 
 
     
@@ -167,10 +220,6 @@ public class CarritoServiceImpl implements CarritoService {
     private boolean VerificarStock(Producto producto, int cantidad){
         return producto.getStock() >= cantidad;
     }
-    private void vaciarCarrito(Carrito carrito) {
-        carritoProductoRepository.deleteByCarrito(carrito);
-    }
-    
     
 }
 

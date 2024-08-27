@@ -1,8 +1,7 @@
 package com.api.api.service.Interfaces;
 
-import java.util.List;
 
-import com.api.api.dominio.CarritoProducto;
+import com.api.api.DTO.CarritoDto;
 
 public interface CarritoService {
 
@@ -10,7 +9,7 @@ public interface CarritoService {
 
     public String AgregarProducto (Long idProducto, Long idUsuario, int cantidad);
 
-    public List<CarritoProducto> findByCarrito(Long idUsuario);
+    public CarritoDto findByCarrito(Long idUsuario);
 
     public String eliminarProducto(Long idProducto, Long idUsuario);
 

@@ -6,10 +6,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
 
-import com.api.api.dominio.Carrito;
-import com.api.api.dominio.CarritoProducto;
+import com.api.api.DTO.CarritoDto;
 import com.api.api.service.Interfaces.CarritoService;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -32,7 +30,7 @@ public class CarritoController {
     }
     
     @GetMapping
-    public List<CarritoProducto> getCarrito(@RequestParam Long idUsuario) {
+    public CarritoDto getCarrito(@RequestParam Long idUsuario) {
         return carritoService.findByCarrito(idUsuario);
     }
     

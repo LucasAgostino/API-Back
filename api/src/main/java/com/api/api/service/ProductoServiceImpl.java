@@ -9,10 +9,8 @@ import org.springframework.stereotype.Service;
 import com.api.api.DTO.ProductoDto;
 import com.api.api.dominio.Categoria;
 import com.api.api.dominio.Producto;
-import com.api.api.dominio.Usuario;
 import com.api.api.repository.CategoriaRepository;
 import com.api.api.repository.ProductoRepository;
-import com.api.api.repository.UsuarioRepository;
 import com.api.api.service.DAO.ProductoDao;
 import com.api.api.service.Interfaces.ProductoService;
 
