@@ -8,9 +8,8 @@ import lombok.Data;
 @Data
 public class PedidoDto {
     private Long idPedido;
-    private Long idUsuario;
+    private String nombreUsuario;
     private LocalDateTime fechaPedido;
     private float totalPedido;
-    private Set<PedidoProductoDto> pedidoProductos;
+    private Set<PedidoProductoDto> pedidoProductos; // Ensure this is populated
 }
-

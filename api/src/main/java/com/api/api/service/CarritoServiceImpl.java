@@ -144,17 +144,21 @@ public class CarritoServiceImpl implements CarritoService {
 
     @Override
     public void realizarPedido(Long idUsuario) {
+        // Obtener el carrito del usuario
         Optional<Carrito> carritoOpt = carritoRepository.findByUsuarioId(idUsuario);
         Carrito carrito = carritoOpt.orElseThrow(() -> new RuntimeException("Carrito no encontrado"));
         
+        // Obtener todos los productos del carrito
         List<CarritoProducto> productos = carritoProductoRepository.findByCarrito(carrito);
         
+        // Verificar que el carrito no esté vacío
         if (productos.isEmpty()) {
             throw new RuntimeException("El carrito está vacío. No se puede realizar un pedido sin productos.");
         }
         
         float totalPedido = 0;
         
+        // Verificar stock y calcular el total del pedido
         for (CarritoProducto carritoProducto : productos) {
             Producto producto = carritoProducto.getProducto();
             int cantidad = carritoProducto.getCantidad();
@@ -166,19 +170,25 @@ public class CarritoServiceImpl implements CarritoService {
             totalPedido += carritoProducto.getPrecioTotal();
         }
 
+        // Crear el pedido utilizando la función existente
         Pedido pedido = pedidoService.crearPedido(idUsuario, totalPedido);
 
+        // Agregar productos al pedido y actualizar el stock utilizando la función existente
         for (CarritoProducto carritoProducto : productos) {
             Producto producto = carritoProducto.getProducto();
             int cantidad = carritoProducto.getCantidad();
             
             producto.setStock(producto.getStock() - cantidad);
             productoRepository.save(producto);
+            
             pedidoProductoService.AgregarProducto(pedido.getIdPedido(), producto.getProductoId(), cantidad);
         }
         
+        // Eliminar los productos del carrito
         carritoProductoRepository.deleteAll(productos);
     }
+
+
   
     @Override
     public CarritoDto findByCarrito(Long idUsuario) {
