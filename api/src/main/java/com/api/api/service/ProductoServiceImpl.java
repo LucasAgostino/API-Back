@@ -25,16 +25,10 @@ public class ProductoServiceImpl implements ProductoService{
     private ProductoRepository productoRepository;
 
     @Autowired
-    private UsuarioRepository usuarioRepository;
-
-    @Autowired
     private CategoriaRepository categoriaRepository;
     
     @Override
     public Producto crearProducto(Producto producto){
-        Usuario usuario = usuarioRepository.findById(producto.getUsuario().getId())
-                .orElseThrow(() -> new RuntimeException("Usuario not found"));
-        producto.setUsuario(usuario);
 
         Categoria categoria = categoriaRepository.findById(producto.getCategoria().getIdCategoria())
             .orElseThrow(() -> new RuntimeException("Categoria not found"));

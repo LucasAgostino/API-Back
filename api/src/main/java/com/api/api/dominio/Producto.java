@@ -33,10 +33,6 @@ public class Producto {
     @Column(name = "precio")
     private float precio;
 
-    @ManyToOne
-    @JoinColumn(name = "id_usuario")
-    private Usuario usuario;
-
     @Column(name = "stock")
     private int stock;
 

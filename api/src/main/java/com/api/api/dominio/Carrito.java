@@ -33,7 +33,4 @@ public class Carrito {
     @Column(name = "fecha_creacion", nullable = false)
     private LocalDateTime fechaCreacion;
 
-    @OneToMany(mappedBy = "carrito", cascade = CascadeType.ALL)
-    private Set<CarritoProducto> carritoProductos = new HashSet<>();
-
 }
