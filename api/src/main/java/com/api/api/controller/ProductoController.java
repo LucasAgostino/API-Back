@@ -4,9 +4,14 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.api.api.DTO.ProductoDto;
 import com.api.api.dominio.Producto;
@@ -15,7 +20,6 @@ import com.api.api.service.Interfaces.ProductoService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 
 
 
@@ -27,8 +31,13 @@ public class ProductoController {
     private ProductoService productoService;
 
     @PostMapping("/create")
-    public Producto postMethodName(@RequestBody Producto producto) { 
-        return productoService.crearProducto(producto);
+    public Producto postMethodName(@RequestParam("nombreProducto") String nombreProducto,
+        @RequestParam("descripcionProducto") String descripcionProducto,
+        @RequestParam("precio") float precio,
+        @RequestParam("stock") int stock,
+        @RequestParam("imagen") MultipartFile imagen,
+        @RequestParam("categoriaId") Long categoriaId) { 
+            return productoService.crearProducto(nombreProducto, descripcionProducto, precio, stock, imagen, categoriaId);
     }
 
     // Realiza una baja logica de un producto
@@ -67,4 +76,20 @@ public class ProductoController {
                                                     @RequestParam(required = false) Float precioMax) {
         return productoService.findByPrecioBetween(precioMin, precioMax);
     }
+
+    @GetMapping("/{id}/imagen")
+    public ResponseEntity<byte[]> getImagen(@PathVariable Long id) {
+        Optional<Producto> producto = productoService.findById(id);
+        Producto producto2 = producto.get();
+        byte[] imagen = producto2.getImagen();
+
+        if (imagen != null) {
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.IMAGE_JPEG); // Ajusta el tipo de contenido según el formato de la imagen
+            return new ResponseEntity<>(imagen, headers, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
 }

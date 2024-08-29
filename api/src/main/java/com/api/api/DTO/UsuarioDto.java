@@ -1,6 +1,8 @@
 package com.api.api.DTO;
 
 
+import com.api.api.dominio.Rol;
+
 import lombok.Data;
 
 @Data
@@ -10,7 +12,7 @@ public class UsuarioDto {
     private String contrasena;
     private String nombre;
     private String apellido;
-    private String rol;
+    private Rol rol;
 
 }
 

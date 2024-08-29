@@ -11,5 +11,5 @@ public class ProductoDto {
     private Long productoId;
     private String nombre;
     private float precio;
-    private String imagen;
+    private byte[] imagen;
 }

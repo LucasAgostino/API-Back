@@ -6,7 +6,7 @@ import java.util.Optional;
 import com.api.api.DTO.UsuarioDto;
 import com.api.api.dominio.Usuario;
 public interface UsuarioService {
-    public Usuario registrarUsuario(Usuario usuario, String rol);
+    public Usuario registrarUsuario(Usuario usuario);
 
     public Usuario autenticarUsuario(String username, String password);
     

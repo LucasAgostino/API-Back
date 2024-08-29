@@ -2,6 +2,8 @@ package com.api.api.dominio;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -32,10 +34,11 @@ public class Usuario {
     private String apellido;
     
     @Column(name = "rol")
-    private String rol;
+    @Enumerated(EnumType.STRING)
+    private Rol rol;
 
     // Puedes agregar un constructor con parámetros si lo necesitas
-    public Usuario(String nombreUsuario, String mail, String contrasena, String nombre, String apellido, String rol) {
+    public Usuario(String nombreUsuario, String mail, String contrasena, String nombre, String apellido, Rol rol) {
         this.nombreUsuario = nombreUsuario;
         this.mail = mail;
         this.contrasena = contrasena;

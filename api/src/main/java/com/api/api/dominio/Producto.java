@@ -37,7 +37,7 @@ public class Producto {
     private int stock;
 
     @Column(name = "imagen")
-    private String imagen;
+    private byte[] imagen;
     
     @ManyToOne
     @JoinColumn(name = "categoria_id")

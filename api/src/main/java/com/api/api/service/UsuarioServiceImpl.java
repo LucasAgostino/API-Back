@@ -8,6 +8,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import com.api.api.DTO.UsuarioDto;
+import com.api.api.dominio.Rol;
 import com.api.api.dominio.Usuario;
 import com.api.api.repository.UsuarioRepository;
 import com.api.api.service.DAO.UsuarioDAO;
@@ -31,7 +32,7 @@ public class UsuarioServiceImpl implements UsuarioService {
     private CarritoService carritoService;
 
     @Override
-    public Usuario registrarUsuario(Usuario usuario, String rol) {
+    public Usuario registrarUsuario(Usuario usuario) {
         // Verificar unicidad del nombre de usuario
         if (usuarioRepository.existsByNombreUsuario(usuario.getNombreUsuario())) {
             throw new RuntimeException("Nombre de usuario ya en uso.");
@@ -46,7 +47,7 @@ public class UsuarioServiceImpl implements UsuarioService {
         usuario.setContrasena(passwordEncoder.encode(usuario.getContrasena()));
         
        
-        usuario.setRol(rol);
+        usuario.setRol(Rol.USER);
         
         // Guardar usuario
         Usuario savedUsuario = usuarioRepository.save(usuario);
