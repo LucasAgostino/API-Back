@@ -46,7 +46,7 @@ public class PedidoDao {
     private PedidoDto convertToDto(Pedido pedido) {
         PedidoDto dto = new PedidoDto();
         dto.setIdPedido(pedido.getIdPedido());
-        dto.setNombreUsuario(pedido.getUsuario().getNombreUsuario());
+        dto.setNombreUsuario(pedido.getUsuario().getEmail());
         dto.setFechaPedido(pedido.getFechaPedido());
         dto.setTotalPedido(pedido.getTotalPedido());
 

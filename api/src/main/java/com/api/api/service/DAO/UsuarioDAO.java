@@ -34,18 +34,17 @@ public class UsuarioDAO {
 
     @Transactional (readOnly = true)
     public Optional<UsuarioDto> findByNombreUsuario(String nombreUsuario) {
-        Optional<Usuario> usuario = Optional.ofNullable(usuarioRepository.findByNombreUsuario(nombreUsuario));
+        Optional<Usuario> usuario = usuarioRepository.findByEmail(nombreUsuario);
         return usuario.map(UsuarioDAO::convertToDto);
     }
 
     private static UsuarioDto convertToDto(Usuario usuario) {
         UsuarioDto usuarioDto = new UsuarioDto();
-        usuarioDto.setNombreUsuario(usuario.getNombreUsuario());
-        usuarioDto.setEmail(usuario.getMail());
-        usuarioDto.setContrasena(usuario.getContrasena());
-        usuarioDto.setNombre(usuario.getNombre());
-        usuarioDto.setApellido(usuario.getApellido());
-        usuarioDto.setRol(usuario.getRol());
+        usuarioDto.setUserName(usuario.getEmail());
+        usuarioDto.setPassword(usuario.getPassword());
+        usuarioDto.setFirstName(usuario.getFirstName());
+        usuarioDto.setSecondName(usuario.getSecondName());
+        usuarioDto.setRole(usuario.getRol());
         return usuarioDto;
     }
 }

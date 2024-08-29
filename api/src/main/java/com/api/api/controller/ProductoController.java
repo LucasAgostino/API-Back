@@ -71,13 +71,13 @@ public class ProductoController {
     }
 
     // Muestra filtrado todos los productos por precio
-    @GetMapping("/filtrar")
+    @GetMapping("/get/filtrar")
     public List<ProductoDto> filtrarProductosPorPrecio(@RequestParam(required = false) Float precioMin,
                                                     @RequestParam(required = false) Float precioMax) {
         return productoService.findByPrecioBetween(precioMin, precioMax);
     }
 
-    @GetMapping("/{id}/imagen")
+    @GetMapping("/get/{id}/imagen")
     public ResponseEntity<byte[]> getImagen(@PathVariable Long id) {
         Optional<Producto> producto = productoService.findById(id);
         Producto producto2 = producto.get();
