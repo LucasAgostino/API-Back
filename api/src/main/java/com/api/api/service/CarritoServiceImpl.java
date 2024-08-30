@@ -18,6 +18,7 @@ import com.api.api.repository.CarritoProductoRepository;
 import com.api.api.repository.CarritoRepository;
 import com.api.api.repository.ProductoRepository;
 import com.api.api.repository.UsuarioRepository;
+import com.api.api.service.DAO.CarritoDao;
 import com.api.api.service.Interfaces.CarritoService;
 import com.api.api.service.Interfaces.PedidoProductoService;
 import com.api.api.service.Interfaces.PedidoService;
@@ -42,6 +43,9 @@ public class CarritoServiceImpl implements CarritoService {
 
     @Autowired
     private PedidoProductoService pedidoProductoService;
+
+    @Autowired
+    private CarritoDao carritoDao;
 
     @Override
     public void crearCarrito(Long idUsuario) {
@@ -191,29 +195,9 @@ public class CarritoServiceImpl implements CarritoService {
 
   
     @Override
-    public CarritoDto findByCarrito(Long idUsuario) {
-        Optional<Carrito> carritoOpt = carritoRepository.findByUsuarioId(idUsuario);
-        Carrito carrito = carritoOpt.orElseThrow(() -> new RuntimeException("Carrito no encontrado"));
-
-        List<CarritoProducto> productos = carritoProductoRepository.findByCarrito(carrito);
-        
-        List<CarritoProductoDto> productosDTO = productos.stream()
-                .map(producto -> {
-                    CarritoProductoDto dto = new CarritoProductoDto();
-                    dto.setIdCarritoProducto(producto.getIdCarritoProducto());
-                    dto.setProducto(producto.getProducto());
-                    dto.setCantidad(producto.getCantidad());
-                    dto.setPrecioTotal(producto.getPrecioTotal());
-                    return dto;
-                })
-                .toList();
-
-        CarritoDto response = new CarritoDto();
-        response.setIdCarrito(carrito.getIdCarrito());
-        response.setProductos(productosDTO);
-
-        return response;
-}
+    public Optional<CarritoDto> findByCarrito(Long idUsuario) {
+        return carritoDao.findByCarritoId(idUsuario);
+    }
 
 
 

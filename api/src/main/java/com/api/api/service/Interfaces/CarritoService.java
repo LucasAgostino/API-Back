@@ -1,6 +1,8 @@
 package com.api.api.service.Interfaces;
 
 
+import java.util.Optional;
+
 import com.api.api.DTO.CarritoDto;
 
 public interface CarritoService {
@@ -9,7 +11,7 @@ public interface CarritoService {
 
     public String AgregarProducto (Long idProducto, Long idUsuario, int cantidad);
 
-    public CarritoDto findByCarrito(Long idUsuario);
+    public Optional<CarritoDto> findByCarrito(Long idUsuario);
 
     public String eliminarProducto(Long idProducto, Long idUsuario);
 

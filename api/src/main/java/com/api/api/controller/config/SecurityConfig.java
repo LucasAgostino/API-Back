@@ -8,7 +8,7 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-import com.api.api.dominio.Rol;
+import com.api.api.dominio.Role;
 
 import static org.springframework.security.config.http.SessionCreationPolicy.STATELESS;
 
@@ -28,9 +28,12 @@ public class SecurityConfig {
                                 .csrf(AbstractHttpConfigurer::disable)
                                 .authorizeHttpRequests(req -> req.requestMatchers("/api/v1/auth/**").permitAll()
                                                 .requestMatchers("/error/**").permitAll()
-                                                .requestMatchers("/productos/get/**").hasAnyAuthority(Rol.USER.name())
-                                                .anyRequest()
-                                                .authenticated())
+                                                .requestMatchers("/productos/get/**").authenticated()
+                                                .requestMatchers("/productos/**").hasAnyAuthority(Role.ADMIN.name())
+                                                .requestMatchers("/categorias/**").permitAll() // Permitir acceso a GET /categorias para todos
+                                                .requestMatchers("/categorias/**").hasAnyAuthority(Role.ADMIN.name()) // Restringir POST /categorias a ADMIN
+                                                .requestMatchers("/usuarios/**").hasAnyAuthority(Role.ADMIN.name())
+                                                .anyRequest().authenticated())
                                 .sessionManagement(session -> session.sessionCreationPolicy(STATELESS))
                                 .authenticationProvider(authenticationProvider)
                                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);

@@ -41,14 +41,14 @@ public class Usuario implements UserDetails{
 
     private String secondName;
     
-    @Column(name = "rol")
+    @Column(name = "role")
     @Enumerated(EnumType.STRING)
-    private Rol rol;
+    private Role role;
 
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority(rol.name()));
+        return List.of(new SimpleGrantedAuthority(role.name()));
     }
 
     @Override

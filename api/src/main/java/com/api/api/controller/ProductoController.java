@@ -8,6 +8,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -79,16 +80,20 @@ public class ProductoController {
 
     @GetMapping("/get/{id}/imagen")
     public ResponseEntity<byte[]> getImagen(@PathVariable Long id) {
-        Optional<Producto> producto = productoService.findById(id);
-        Producto producto2 = producto.get();
-        byte[] imagen = producto2.getImagen();
+        Optional<Producto> productoOpt = productoService.findById(id);
+        if (productoOpt.isPresent()) {
+            Producto producto = productoOpt.get();
+            byte[] imagen = producto.getImagen();
 
-        if (imagen != null) {
-            HttpHeaders headers = new HttpHeaders();
-            headers.setContentType(MediaType.IMAGE_JPEG); // Ajusta el tipo de contenido según el formato de la imagen
-            return new ResponseEntity<>(imagen, headers, HttpStatus.OK);
+            if (imagen != null) {
+                HttpHeaders headers = new HttpHeaders();
+                headers.setContentType(MediaType.IMAGE_JPEG); // Ajusta según el formato de la imagen
+                return new ResponseEntity<>(imagen, headers, HttpStatus.OK);
+            } else {
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND); // Imagen no encontrada
+            }
         } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND); // Producto no encontrado
         }
     }
 

@@ -1,5 +1,7 @@
 package com.api.api.controller;
 
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -30,7 +32,7 @@ public class CarritoController {
     }
     
     @GetMapping
-    public CarritoDto getCarrito(@RequestParam Long idUsuario) {
+    public Optional<CarritoDto> getCarrito(@RequestParam Long idUsuario) {
         return carritoService.findByCarrito(idUsuario);
     }
     

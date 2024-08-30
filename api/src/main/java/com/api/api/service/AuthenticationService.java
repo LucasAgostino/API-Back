@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.api.api.controller.auth.*;
 import com.api.api.controller.config.JwtService;
-import com.api.api.dominio.Rol;
+import com.api.api.dominio.Role;
 import com.api.api.dominio.Usuario;
 import com.api.api.repository.UsuarioRepository;
 
@@ -27,7 +27,7 @@ public class AuthenticationService {
                                 .secondName(request.getLastname())
                                 .email(request.getEmail())
                                 .password(passwordEncoder.encode(request.getPassword()))
-                                .rol(Rol.USER)
+                                .role(Role.USER)
                                 .build();
                 repository.save(user);
                 var jwtToken = jwtService.generateToken(user);

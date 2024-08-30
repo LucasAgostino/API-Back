@@ -41,10 +41,8 @@ public class UsuarioDAO {
     private static UsuarioDto convertToDto(Usuario usuario) {
         UsuarioDto usuarioDto = new UsuarioDto();
         usuarioDto.setUserName(usuario.getEmail());
-        usuarioDto.setPassword(usuario.getPassword());
         usuarioDto.setFirstName(usuario.getFirstName());
         usuarioDto.setSecondName(usuario.getSecondName());
-        usuarioDto.setRole(usuario.getRol());
         return usuarioDto;
     }
 }

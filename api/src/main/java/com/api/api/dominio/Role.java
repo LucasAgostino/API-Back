@@ -1,6 +1,6 @@
 package com.api.api.dominio;
 
-public enum Rol {
+public enum Role {
     USER,
     ADMIN
 }
