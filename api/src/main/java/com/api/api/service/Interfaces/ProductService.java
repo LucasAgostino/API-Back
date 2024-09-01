@@ -10,8 +10,10 @@ import com.api.api.entity.Product;
 
 public interface ProductService {
 
-    public Product createProduct(String productName, String productDescription, float price, int stock, MultipartFile image, Long categoryId);
+    public Product createProduct(String productName, String productDescription, float price, int stock, List<MultipartFile> images, Long categoryId);
 
+    public Product addImagesToProduct(Long productId, List<MultipartFile> images);
+    
     public Product softDeleteProduct(Long productId);
 
     public Product updateProductStock(Long productId, int quantity);

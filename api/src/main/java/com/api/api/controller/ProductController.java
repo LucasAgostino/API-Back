@@ -4,10 +4,6 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -33,10 +29,18 @@ public class ProductController {
                                  @RequestParam String productDescription,
                                  @RequestParam float price,
                                  @RequestParam int stock,
-                                 @RequestParam MultipartFile image,
+                                 @RequestParam(required = false) List<MultipartFile> images,
                                  @RequestParam Long categoryId) {
-        return productService.createProduct(productName, productDescription, price, stock, image, categoryId);
+        return productService.createProduct(productName, productDescription, price, stock, images, categoryId);
     }
+
+    @PostMapping("/add-images")
+    public Product addImagesToProduct(
+        @RequestParam Long productId,
+        @RequestParam List<MultipartFile> images) {
+    return productService.addImagesToProduct(productId, images);
+    }
+
 
     @PostMapping("/delete/{id}")
     public Product softDeleteProduct(@PathVariable("id") Long productId) {
@@ -68,23 +72,4 @@ public class ProductController {
                                                   @RequestParam(required = false) Float maxPrice) {
         return productService.findByPriceRange(minPrice, maxPrice);
     }    
-
-    @GetMapping("/get/{id}/image")
-    public ResponseEntity<byte[]> getImage(@PathVariable Long id) {
-        Optional<Product> productOpt = productService.findById(id);
-        if (productOpt.isPresent()) {
-            Product product = productOpt.get();
-            byte[] image = product.getImage();
-
-            if (image != null) {
-                HttpHeaders headers = new HttpHeaders();
-                headers.setContentType(MediaType.IMAGE_JPEG); // Adjust according to the image format
-                return new ResponseEntity<>(image, headers, HttpStatus.OK);
-            } else {
-                return new ResponseEntity<>(HttpStatus.NOT_FOUND); // Image not found
-            }
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND); // Product not found
-        }
-    }
 }

@@ -11,6 +11,7 @@ import java.util.stream.Collectors;
 
 import com.api.api.DTO.ProductDto;
 import com.api.api.entity.Product;
+import com.api.api.entity.ProductImage;
 
 @Service
 public class ProductDao {
@@ -47,7 +48,10 @@ public class ProductDao {
         dto.setProductId(product.getProductId());
         dto.setProductName(product.getProductName());
         dto.setPrice(product.getPrice());
-        dto.setImage(product.getImage());
+        List<byte[]> imageBytes = product.getImages().stream()
+                                        .map(ProductImage::getImageData)
+                                        .collect(Collectors.toList());
+        dto.setImages(imageBytes);
         return dto;
     }
 }
