@@ -57,11 +57,9 @@ public class ProductServiceImpl implements ProductService {
         }
     
         // Devolver el producto con las imágenes
-        return savedProduct;
+        return productRepository.findById(savedProduct.getProductId())
+            .orElseThrow(() -> new RuntimeException("Product not found after saving"));
     }
-    
-    
-
     
     @Override
     public Product addImagesToProduct(Long productId, List<MultipartFile> images) {
@@ -80,12 +78,16 @@ public class ProductServiceImpl implements ProductService {
                         productImage.setProduct(product); 
                         productImages.add(productImage);
                         productImagesRepository.save(productImage);
+                        System.out.println("Image processed and added: " + image.getOriginalFilename());
                     } catch (IOException e) {
                         throw new RuntimeException("Error processing the image", e);
                     }
                 } else {
                     System.out.println("Empty or null image file skipped.");
                 }
+            }
+            if (product.getImages() == null) {
+                product.setImages(new ArrayList<>());
             }
             product.getImages().addAll(productImages); // Agregar nuevas imágenes al producto existente
         } else {
@@ -95,6 +97,7 @@ public class ProductServiceImpl implements ProductService {
         // Guardar y devolver el producto actualizado
         return productRepository.save(product);
     }
+    
     
 
     @Override
