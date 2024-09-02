@@ -1,8 +1,13 @@
 package com.api.api.service;
 
 import java.io.IOException;
+import java.sql.Blob;
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
+
+import javax.sql.rowset.serial.SerialBlob;
+
 import java.util.ArrayList; // Add this import statement
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,11 +39,11 @@ public class ProductServiceImpl implements ProductService {
     private ProductImagesRepository productImagesRepository;
 
     @Override
-    public Product createProduct(String productName, String productDescription, float price, int stock, List<MultipartFile> images, Long categoryId) {
+    public ProductDto createProduct(String productName, String productDescription, float price, int stock, List<MultipartFile> images, Long categoryId) {
         // Verificar y establecer la categoría
         Category category = categoryRepository.findById(categoryId)
             .orElseThrow(() -> new RuntimeException("Category not found"));
-    
+        
         // Crear un nuevo objeto Product
         Product product = new Product();
         product.setProductName(productName);
@@ -46,27 +51,31 @@ public class ProductServiceImpl implements ProductService {
         product.setPrice(price);
         product.setStock(stock);
         product.setCategory(category);
-    
+        
         // Guardar el producto primero
         Product savedProduct = productRepository.save(product);
         System.out.println("Product saved with ID: " + savedProduct.getProductId());
-    
+        
         // Manejar las imágenes: Usar la función para agregar imágenes al producto ya guardado
         if (images != null && !images.isEmpty()) {
+            System.out.println("Processing images...");
             addImagesToProduct(savedProduct.getProductId(), images);
+        } else {
+            System.out.println("No images to process.");
         }
-    
+        
         // Devolver el producto con las imágenes
-        return productRepository.findById(savedProduct.getProductId())
-            .orElseThrow(() -> new RuntimeException("Product not found after saving"));
+        return productDao.findById(savedProduct.getProductId());
     }
     
-    @Override
-    public Product addImagesToProduct(Long productId, List<MultipartFile> images) {
+    
+    
+   @Override
+    public ProductDto addImagesToProduct(Long productId, List<MultipartFile> images) {
         // Buscar el producto por ID
         Product product = productRepository.findById(productId)
             .orElseThrow(() -> new RuntimeException("Product not found"));
-    
+
         // Procesar las imágenes
         if (images != null && !images.isEmpty()) {
             List<ProductImage> productImages = new ArrayList<>();
@@ -74,12 +83,13 @@ public class ProductServiceImpl implements ProductService {
                 if (image != null && !image.isEmpty()) {
                     try {
                         ProductImage productImage = new ProductImage();
-                        productImage.setImageData(image.getBytes());
+                        Blob blob = new SerialBlob(image.getBytes()); // Convertir byte[] a Blob
+                        productImage.setImageData(blob);
                         productImage.setProduct(product); 
                         productImages.add(productImage);
                         productImagesRepository.save(productImage);
                         System.out.println("Image processed and added: " + image.getOriginalFilename());
-                    } catch (IOException e) {
+                    } catch (IOException | SQLException e) {
                         throw new RuntimeException("Error processing the image", e);
                     }
                 } else {
@@ -93,27 +103,29 @@ public class ProductServiceImpl implements ProductService {
         } else {
             System.out.println("No images provided.");
         }
-    
+        productRepository.save(product);
         // Guardar y devolver el producto actualizado
-        return productRepository.save(product);
+        return productDao.findById(productId);
     }
     
     
 
     @Override
-    public Product softDeleteProduct(Long productId) {
+    public ProductDto softDeleteProduct(Long productId) {
         Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new RuntimeException("Product not found"));
         product.setState(false);
-        return productRepository.save(product);
+        productRepository.save(product);
+        return productDao.findById(productId);
     }
 
     @Override
-    public Product updateProductStock(Long productId, int quantity) {
+    public ProductDto updateProductStock(Long productId, int quantity) {
         Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new RuntimeException("Product not found"));
         product.setStock(quantity);
-        return productRepository.save(product);
+        productRepository.save(product);
+        return productDao.findById(productId);
     }
 
     @Override
@@ -122,8 +134,8 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public Optional<Product> findById(Long productId) {
-        return productRepository.findById(productId);
+    public Optional<ProductDto> findById(Long productId) {
+        return Optional.ofNullable(productDao.findById(productId));
     }
 
     @Override

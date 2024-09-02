@@ -6,12 +6,14 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.api.api.repository.ProductRepository;
 
+import java.sql.Blob;
+import java.sql.SQLException;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.Base64;
 
 import com.api.api.DTO.ProductDto;
 import com.api.api.entity.Product;
-import com.api.api.entity.ProductImage;
 
 @Service
 public class ProductDao {
@@ -44,14 +46,29 @@ public class ProductDao {
     }
     
     private ProductDto convertToDTO(Product product) {
-        ProductDto dto = new ProductDto();
-        dto.setProductId(product.getProductId());
-        dto.setProductName(product.getProductName());
-        dto.setPrice(product.getPrice());
-        List<byte[]> imageBytes = product.getImages().stream()
-                                        .map(ProductImage::getImageData)
-                                        .collect(Collectors.toList());
-        dto.setImages(imageBytes);
-        return dto;
-    }
+    ProductDto dto = new ProductDto();
+    dto.setProductId(product.getProductId());
+    dto.setProductName(product.getProductName());
+    dto.setPrice(product.getPrice());
+    List<String> imageBase64s = product.getImages().stream()
+        .map(productImage -> {
+            try {
+                Blob imageBlob = productImage.getImageData();
+                byte[] imageBytes = imageBlob.getBytes(1, (int) imageBlob.length());
+                return Base64.getEncoder().encodeToString(imageBytes);
+            } catch (SQLException e) {
+                throw new RuntimeException("Error al convertir Blob a Base64", e);
+            }
+        })
+        .collect(Collectors.toList());
+    dto.setImageBase64s(imageBase64s);
+    dto.setCategoryName(product.getCategory().getCategoryName());
+    dto.setStock(product.getStock());
+    dto.setActive(product.getState());
+    dto.setProductDescription(product.getDescriptionProducto());
+    return dto;
+}
+
+    
+
 }

@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.api.api.DTO.ProductDto;
-import com.api.api.entity.Product;
 import com.api.api.service.Interfaces.ProductService;
 
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,17 +24,17 @@ public class ProductController {
     private ProductService productService;
 
     @PostMapping("/create")
-    public Product createProduct(@RequestParam String productName,
-                                 @RequestParam String productDescription,
-                                 @RequestParam float price,
-                                 @RequestParam int stock,
-                                 @RequestParam(required = false) List<MultipartFile> images,
-                                 @RequestParam Long categoryId) {
+    public ProductDto createProduct(@RequestParam String productName,
+                                    @RequestParam String productDescription,
+                                    @RequestParam float price,
+                                    @RequestParam int stock,
+                                    @RequestParam(required = false) List<MultipartFile> images,
+                                    @RequestParam Long categoryId) {
         return productService.createProduct(productName, productDescription, price, stock, images, categoryId);
     }
 
     @PostMapping("/add-images")
-    public Product addImagesToProduct(
+    public ProductDto addImagesToProduct(
         @RequestParam Long productId,
         @RequestParam List<MultipartFile> images) {
     return productService.addImagesToProduct(productId, images);
@@ -43,12 +42,12 @@ public class ProductController {
 
 
     @PostMapping("/delete/{id}")
-    public Product softDeleteProduct(@PathVariable("id") Long productId) {
+    public ProductDto softDeleteProduct(@PathVariable("id") Long productId) {
         return productService.softDeleteProduct(productId);
     }
 
     @PostMapping("/update/{id}")
-    public Product updateProductStock(@PathVariable("id") Long productId, @RequestParam int stock) {
+    public ProductDto updateProductStock(@PathVariable("id") Long productId, @RequestParam int stock) {
         return productService.updateProductStock(productId, stock);
     }
     
@@ -58,7 +57,7 @@ public class ProductController {
     }
     
     @GetMapping("/get/{id}")
-    public Optional<Product> getProductById(@PathVariable("id") Long productId) {
+    public Optional<ProductDto> getProductById(@PathVariable("id") Long productId) {
         return productService.findById(productId);
     }
 
