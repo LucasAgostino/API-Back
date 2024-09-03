@@ -73,8 +73,10 @@ public class CartServiceImpl implements CartService {
             if (!checkStock(product, oldStock + quantity)) {
                 return "Insufficient stock";
             }
+            float price = product.getPrice() * (oldStock + quantity);
             existingCartProduct.setQuantity(oldStock + quantity);
-            existingCartProduct.setTotalPrice(product.getPrice() * (oldStock + quantity));
+            existingCartProduct.setTotalPrice(price);
+            existingCartProduct.setDiscountPrice(price - (price * product.getDiscountPercentage()));
             cartProductRepository.save(existingCartProduct);
         } else {
             CartProduct newCartProduct = new CartProduct();
@@ -84,7 +86,9 @@ public class CartServiceImpl implements CartService {
             newCartProduct.setCart(cart);
             newCartProduct.setProduct(product);
             newCartProduct.setQuantity(quantity);
-            newCartProduct.setTotalPrice(product.getPrice() * quantity);
+            float price = product.getPrice() * quantity;
+            newCartProduct.setTotalPrice(price);
+            newCartProduct.setDiscountPrice(price - (price * product.getDiscountPercentage()));
             cartProductRepository.save(newCartProduct);
         }
     
@@ -126,8 +130,10 @@ public class CartServiceImpl implements CartService {
             int newQuantity = currentQuantity - quantity;
 
             if (newQuantity > 0) {
+                float price = product.getPrice() * newQuantity;
                 existingCartProduct.setQuantity(newQuantity);
-                existingCartProduct.setTotalPrice(product.getPrice() * newQuantity);
+                existingCartProduct.setTotalPrice(price);
+                existingCartProduct.setDiscountPrice(price - (price * product.getDiscountPercentage()));
                 cartProductRepository.save(existingCartProduct);
             } else {
                 cartProductRepository.delete(existingCartProduct);
@@ -160,7 +166,7 @@ public class CartServiceImpl implements CartService {
                 throw new RuntimeException("Insufficient stock for the product: " + product.getProductName());
             }
             
-            totalOrder += cartProduct.getTotalPrice();
+            totalOrder += cartProduct.getDiscountPrice();
         }
 
         Order order = orderService.createOrder(userId, totalOrder);
@@ -194,4 +200,15 @@ public class CartServiceImpl implements CartService {
     private boolean checkStock(Product product, int quantity) {
         return product.getStock() >= quantity;
     }
+
+    public void updatePricesInCarts(Product product) {
+        List<CartProduct> cartProducts = cartProductRepository.findByProduct(product);
+        for (CartProduct cartProduct : cartProducts) {
+            float price = product.getPrice() * cartProduct.getQuantity();
+            cartProduct.setTotalPrice(price);
+            cartProduct.setDiscountPrice(price - (price * product.getDiscountPercentage()));
+            cartProductRepository.save(cartProduct);
+        }
+    }
+    
 }

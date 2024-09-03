@@ -35,4 +35,7 @@ public class CartProduct {
 
     @Column(name = "total_price", nullable = false)
     private float totalPrice;
+
+    @Column(name = "discount_price", nullable = false)
+    private float discountPrice;
 }

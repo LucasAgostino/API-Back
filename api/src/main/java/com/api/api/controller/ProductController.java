@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -28,10 +29,11 @@ public class ProductController {
     public ProductDto createProduct(@RequestParam String productName,
                                     @RequestParam String productDescription,
                                     @RequestParam float price,
+                                    @RequestParam(required = false) float discountPercentage,
                                     @RequestParam int stock,
                                     @RequestParam(required = false) List<MultipartFile> images,
                                     @RequestParam Long categoryId) {
-        return productService.createProduct(productName, productDescription, price, stock, images, categoryId);
+        return productService.createProduct(productName, productDescription, price, discountPercentage, stock, images, categoryId);
     }
 
     @PostMapping("/add-images")
@@ -72,4 +74,12 @@ public class ProductController {
                                                   @RequestParam(required = false) Float maxPrice) {
         return productService.findByPriceRange(minPrice, maxPrice);
     }    
+
+    @PutMapping("/{productId}/discount")
+    public ResponseEntity<ProductDto> updateDiscount(
+            @PathVariable Long productId,
+            @RequestParam float discountPercentage) {
+        ProductDto updatedProduct = productService.updateProductDiscount(productId, discountPercentage);
+        return ResponseEntity.ok(updatedProduct);
+    }
 }

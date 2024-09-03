@@ -52,4 +52,8 @@ public class Product {
 
     @Column(name = "state")
     private Boolean state = true;
+
+    @Column(name = "discount_percentage")
+    private Float discountPercentage = 0.0f; // El descuento inicial es 0%
+
 }

@@ -12,4 +12,5 @@ public class CartProductDto {
     private String productName;
     private int quantity;
     private float totalPrice;
+    private float discountPrice;
 }

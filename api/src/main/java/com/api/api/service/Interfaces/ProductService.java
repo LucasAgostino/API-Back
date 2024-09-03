@@ -9,7 +9,7 @@ import com.api.api.DTO.ProductDto;
 
 public interface ProductService {
 
-    public ProductDto createProduct(String productName, String productDescription, float price, int stock, List<MultipartFile> images, Long categoryId);
+    public ProductDto createProduct(String productName, String productDescription, float price, float discountPercentage, int stock, List<MultipartFile> images, Long categoryId);
 
     public ProductDto addImagesToProduct(Long productId, List<MultipartFile> images);
     
@@ -24,4 +24,6 @@ public interface ProductService {
     public List<ProductDto> getProductsByCategory(Long categoryId);
     
     public List<ProductDto> findByPriceRange(float minPrice, float maxPrice);
+
+    public ProductDto updateProductDiscount(Long productId, float discountPercentage);
 }

@@ -11,4 +11,6 @@ public interface UserService {
     public Optional<UserDto> findById(Long id);
 
     public Optional<UserDto> findByEmail(String email);
+
+    public Long getCurrentUserId();
 }

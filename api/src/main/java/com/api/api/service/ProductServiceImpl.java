@@ -22,6 +22,7 @@ import com.api.api.repository.CategoryRepository;
 import com.api.api.repository.ProductImagesRepository;
 import com.api.api.repository.ProductRepository;
 import com.api.api.service.DAO.ProductDao;
+import com.api.api.service.Interfaces.CartService;
 import com.api.api.service.Interfaces.ProductService;
 
 @Service
@@ -38,8 +39,11 @@ public class ProductServiceImpl implements ProductService {
     @Autowired
     private ProductImagesRepository productImagesRepository;
 
+    @Autowired
+    private CartService cartService;
+
     @Override
-    public ProductDto createProduct(String productName, String productDescription, float price, int stock, List<MultipartFile> images, Long categoryId) {
+    public ProductDto createProduct(String productName, String productDescription, float price, float discountPercentage, int stock, List<MultipartFile> images, Long categoryId) {
         // Verificar y establecer la categoría
         Category category = categoryRepository.findById(categoryId)
             .orElseThrow(() -> new RuntimeException("Category not found"));
@@ -49,6 +53,7 @@ public class ProductServiceImpl implements ProductService {
         product.setProductName(productName);
         product.setDescriptionProducto(productDescription);
         product.setPrice(price);
+        product.setDiscountPercentage(discountPercentage);
         product.setStock(stock);
         product.setCategory(category);
         
@@ -108,7 +113,21 @@ public class ProductServiceImpl implements ProductService {
         return productDao.findById(productId);
     }
     
-    
+    @Override
+    public ProductDto updateProductDiscount(Long productId, float discountPercentage) {
+        // Buscar y actualizar el producto
+        Product product = productRepository.findById(productId)
+                .orElseThrow(() -> new RuntimeException("Product not found"));
+        product.setDiscountPercentage(discountPercentage);
+        productRepository.save(product);
+
+        // Actualizar precios en todos los carritos que contienen este producto
+        cartService.updatePricesInCarts(product);
+
+        return productDao.findById(productId);
+    }
+
+
 
     @Override
     public ProductDto softDeleteProduct(Long productId) {

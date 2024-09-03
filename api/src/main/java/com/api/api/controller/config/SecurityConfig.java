@@ -1,6 +1,7 @@
 package com.api.api.controller.config;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -30,8 +31,8 @@ public class SecurityConfig {
                                                 .requestMatchers("/error/**").permitAll()
                                                 .requestMatchers("/products/get/**").authenticated()
                                                 .requestMatchers("/products/**").hasAnyAuthority(Role.ADMIN.name()) 
+                                                .requestMatchers(HttpMethod.POST, "/categories/**").hasAuthority(Role.ADMIN.name())
                                                 .requestMatchers("/categories/**").permitAll() // Permitir acceso a GET /categorias para todos
-                                                .requestMatchers("/categories/**").hasAnyAuthority(Role.ADMIN.name()) // Restringir POST /categorias a ADMIN
                                                 .requestMatchers("/user/**").hasAnyAuthority(Role.ADMIN.name())
                                                 .requestMatchers("/order/admin/**").hasAnyAuthority(Role.ADMIN.name())
                                                 .anyRequest().authenticated())

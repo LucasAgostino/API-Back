@@ -50,6 +50,7 @@ public class ProductDao {
     dto.setProductId(product.getProductId());
     dto.setProductName(product.getProductName());
     dto.setPrice(product.getPrice());
+    dto.setDiscountPercentage(product.getDiscountPercentage());
     List<String> imageBase64s = product.getImages().stream()
         .map(productImage -> {
             try {

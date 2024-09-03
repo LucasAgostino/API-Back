@@ -35,6 +35,7 @@ public class CartDao {
         dto.setProductName(cartProduct.getProduct().getProductName());
         dto.setQuantity(cartProduct.getQuantity());
         dto.setTotalPrice(cartProduct.getTotalPrice());
+        dto.setDiscountPrice(cartProduct.getDiscountPrice());
         return dto;
     }
 

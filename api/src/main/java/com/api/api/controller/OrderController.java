@@ -11,6 +11,9 @@ import java.util.List;
 
 import com.api.api.DTO.OrderDto;
 import com.api.api.service.Interfaces.OrderService;
+import com.api.api.service.Interfaces.UserService;
+
+
 
 @RestController
 @RequestMapping("/order")
@@ -18,6 +21,9 @@ public class OrderController {
 
     @Autowired
     private OrderService orderService;
+
+    @Autowired
+    private UserService userService;
 
     @GetMapping("/admin/get")
     public List<OrderDto> getAllOrders() {
@@ -33,4 +39,11 @@ public class OrderController {
     public List<OrderDto> getOrdersByUser(@PathVariable Long userId) {
         return orderService.findByUserId(userId);
     }
+
+    @GetMapping("/user/find")
+    public List<OrderDto> getUserOrders() {
+        Long userId = userService.getCurrentUserId();
+        return orderService.findByUserId(userId);
+    }
+    
 }

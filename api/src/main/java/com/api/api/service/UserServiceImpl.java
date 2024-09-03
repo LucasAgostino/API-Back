@@ -4,9 +4,12 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import com.api.api.DTO.UserDto;
+import com.api.api.entity.User;
 import com.api.api.service.DAO.UserDAO;
 import com.api.api.service.Interfaces.UserService;
 
@@ -32,5 +35,11 @@ public class UserServiceImpl implements UserService {
     @Override
     public Optional<UserDto> findByEmail(String email) {
         return userDAO.findByEmail(email);
+    }
+
+    public Long getCurrentUserId() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User user = (User) authentication.getPrincipal(); 
+        return user.getId(); // Devuelve el ID del usuario
     }
 }
