@@ -7,22 +7,24 @@ import org.springframework.stereotype.Service;
 
 import com.api.api.controller.auth.*;
 import com.api.api.controller.config.JwtService;
-import com.api.api.dominio.Role;
-import com.api.api.dominio.Usuario;
-import com.api.api.repository.UsuarioRepository;
+import com.api.api.entity.Role;
+import com.api.api.entity.User;
+import com.api.api.repository.UserRepository;
+import com.api.api.service.Interfaces.CartService;
 
 import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
 public class AuthenticationService {
-        private final UsuarioRepository repository;
+        private final UserRepository repository;
         private final PasswordEncoder passwordEncoder;
         private final JwtService jwtService;
         private final AuthenticationManager authenticationManager;
+        private final CartService cartService;
 
         public AuthenticationResponse register(RegisterRequest request) {
-                var user = Usuario.builder()
+                var user = User.builder()
                                 .firstName(request.getFirstname())
                                 .secondName(request.getLastname())
                                 .email(request.getEmail())
@@ -30,6 +32,7 @@ public class AuthenticationService {
                                 .role(Role.USER)
                                 .build();
                 repository.save(user);
+                cartService.createCart(user.getId());
                 var jwtToken = jwtService.generateToken(user);
                 return AuthenticationResponse.builder()
                                 .accessToken(jwtToken)
@@ -39,10 +42,10 @@ public class AuthenticationService {
         public AuthenticationResponse authenticate(AuthenticationRequest request) {
                 authenticationManager.authenticate(
                                 new UsernamePasswordAuthenticationToken(
-                                                request.getEmail(),
+                                                request.getUsername(),
                                                 request.getPassword()));
 
-                var user = repository.findByEmail(request.getEmail())
+                var user = repository.findByEmail(request.getUsername())
                                 .orElseThrow();
                 var jwtToken = jwtService.generateToken(user);
                 return AuthenticationResponse.builder()
