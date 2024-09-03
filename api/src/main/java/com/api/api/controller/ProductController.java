@@ -15,6 +15,7 @@ import com.api.api.service.Interfaces.ProductService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 
 @RestController
 @RequestMapping("/products")
@@ -41,12 +42,12 @@ public class ProductController {
     }
 
 
-    @PostMapping("/delete/{id}")
+    @PutMapping("/delete/{id}")
     public ProductDto softDeleteProduct(@PathVariable("id") Long productId) {
         return productService.softDeleteProduct(productId);
     }
 
-    @PostMapping("/update/{id}")
+    @PutMapping("/update/{id}")
     public ProductDto updateProductStock(@PathVariable("id") Long productId, @RequestParam int stock) {
         return productService.updateProductStock(productId, stock);
     }
