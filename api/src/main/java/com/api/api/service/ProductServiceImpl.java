@@ -5,6 +5,7 @@ import java.sql.Blob;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import javax.sql.rowset.serial.SerialBlob;
 
@@ -17,6 +18,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.api.api.DTO.ProductDto;
 import com.api.api.entity.Category;
 import com.api.api.entity.Product;
+import com.api.api.entity.Tag;
 import com.api.api.entity.ProductImage;
 import com.api.api.repository.CategoryRepository;
 import com.api.api.repository.ProductImagesRepository;
@@ -43,7 +45,7 @@ public class ProductServiceImpl implements ProductService {
     private CartService cartService;
 
     @Override
-    public ProductDto createProduct(String productName, String productDescription, float price, float discountPercentage, int stock, List<MultipartFile> images, Long categoryId) {
+    public ProductDto createProduct(String productName, String productDescription, float price, float discountPercentage, int stock, List<MultipartFile> images, Long categoryId, Set<Tag> tags) {
         // Verificar y establecer la categoría
         Category category = categoryRepository.findById(categoryId)
             .orElseThrow(() -> new RuntimeException("Category not found"));
@@ -56,6 +58,7 @@ public class ProductServiceImpl implements ProductService {
         product.setDiscountPercentage(discountPercentage);
         product.setStock(stock);
         product.setCategory(category);
+        product.setTags(tags);
         
         // Guardar el producto primero
         Product savedProduct = productRepository.save(product);
@@ -126,6 +129,37 @@ public class ProductServiceImpl implements ProductService {
 
         return productDao.findById(productId);
     }
+
+    @Override
+    public ProductDto addTagToProduct(Long productId, Tag tag) {
+        Product product = productRepository.findById(productId)
+                .orElseThrow(() -> new RuntimeException("Product not found"));
+        
+        // Agregar el tag al conjunto si no está presente
+        product.getTags().add(tag);
+
+        // Guardar los cambios
+        Product updatedProduct = productRepository.save(product);
+
+        // Devolver el producto actualizado
+        return productDao.findById(updatedProduct.getProductId());
+    }
+
+    @Override
+    public ProductDto removeTagFromProduct(Long productId, Tag tag) {
+        Product product = productRepository.findById(productId)
+                .orElseThrow(() -> new RuntimeException("Product not found"));
+        
+        // Eliminar el tag del conjunto si está presente
+        product.getTags().remove(tag);
+
+        // Guardar los cambios
+        Product updatedProduct = productRepository.save(product);
+
+        // Devolver el producto actualizado
+        return productDao.findById(updatedProduct.getProductId());
+    }
+
 
 
 

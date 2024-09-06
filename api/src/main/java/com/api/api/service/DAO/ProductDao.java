@@ -14,6 +14,7 @@ import java.util.Base64;
 
 import com.api.api.DTO.ProductDto;
 import com.api.api.entity.Product;
+import com.api.api.entity.Tag;
 
 @Service
 public class ProductDao {
@@ -67,6 +68,7 @@ public class ProductDao {
     dto.setStock(product.getStock());
     dto.setActive(product.getState());
     dto.setProductDescription(product.getDescriptionProducto());
+    dto.setTags(product.getTags());
     return dto;
 }
 

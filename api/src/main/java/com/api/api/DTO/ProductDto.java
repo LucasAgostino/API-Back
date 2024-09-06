@@ -1,6 +1,9 @@
 package com.api.api.DTO;
 
 import java.util.List;
+import java.util.Set;
+
+import com.api.api.entity.Tag;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -19,4 +22,5 @@ public class ProductDto {
     private int stock;
     private String categoryName;
     private boolean active;
+    private Set<Tag> tags;
 }
