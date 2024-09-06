@@ -1,12 +1,18 @@
 package com.api.api.entity;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import jakarta.persistence.CascadeType;
+import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
+import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -55,5 +61,11 @@ public class Product {
 
     @Column(name = "discount_percentage")
     private Float discountPercentage = 0.0f; // El descuento inicial es 0%
+
+    @ElementCollection(targetClass = Tag.class)
+    @CollectionTable(name = "product_tags", joinColumns = @JoinColumn(name = "product_id"))
+    @Enumerated(EnumType.STRING)
+    @Column(name = "tag")
+    private Set<Tag> tags = new HashSet<>();  
 
 }

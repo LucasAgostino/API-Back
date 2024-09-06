@@ -29,7 +29,7 @@ public class SecurityConfig {
                                 .csrf(AbstractHttpConfigurer::disable)
                                 .authorizeHttpRequests(req -> req.requestMatchers("/api/v1/auth/**").permitAll()
                                                 .requestMatchers("/error/**").permitAll()
-                                                .requestMatchers("/products/get/**").authenticated()
+                                                .requestMatchers("/products/get/**").permitAll()
                                                 .requestMatchers("/products/**").hasAnyAuthority(Role.ADMIN.name()) 
                                                 .requestMatchers(HttpMethod.POST, "/categories/**").hasAuthority(Role.ADMIN.name())
                                                 .requestMatchers("/categories/**").permitAll() // Permitir acceso a GET /categorias para todos
