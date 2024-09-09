@@ -116,34 +116,6 @@ public class ProductServiceImpl implements ProductService {
         return productDao.findById(productId);
     }
     
-    @Override
-    public ProductDto updateProductDiscount(Long productId, float discountPercentage) {
-        // Buscar y actualizar el producto
-        Product product = productRepository.findById(productId)
-                .orElseThrow(() -> new RuntimeException("Product not found"));
-        product.setDiscountPercentage(discountPercentage);
-        productRepository.save(product);
-
-        // Actualizar precios en todos los carritos que contienen este producto
-        cartService.updatePricesInCarts(product);
-
-        return productDao.findById(productId);
-    }
-
-    @Override
-    public ProductDto addTagToProduct(Long productId, Tag tag) {
-        Product product = productRepository.findById(productId)
-                .orElseThrow(() -> new RuntimeException("Product not found"));
-        
-        // Agregar el tag al conjunto si no está presente
-        product.getTags().add(tag);
-
-        // Guardar los cambios
-        Product updatedProduct = productRepository.save(product);
-
-        // Devolver el producto actualizado
-        return productDao.findById(updatedProduct.getProductId());
-    }
 
     @Override
     public ProductDto removeTagFromProduct(Long productId, Tag tag) {
@@ -173,11 +145,61 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public ProductDto updateProductStock(Long productId, int quantity) {
+    public ProductDto updateProduct(Long productId, Integer stock, Float discountPercentage, Float price, String name, Tag tag, String description) {
         Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new RuntimeException("Product not found"));
-        product.setStock(quantity);
+
+        // Actualizar stock si es proporcionado
+        if (stock != null) {
+            product.setStock(stock);
+        }
+
+        // Actualizar descuento si es proporcionado
+        if (discountPercentage != null) {
+            product.setDiscountPercentage(discountPercentage);
+        }
+
+        // Actualizar precio si es proporcionado
+        if (price != null) {
+            product.setPrice(price);
+            cartService.updatePricesInCarts(product); // Si necesitas actualizar precios en el carrito
+        }
+
+        // Actualizar nombre si es proporcionado
+        if (name != null) {
+            productRepository.findByProductName(name).ifPresent(p -> {
+                throw new RuntimeException("Product with the same name already exists");
+            });
+            product.setProductName(name);
+        }
+
+        // Agregar tag si es proporcionado
+        if (tag != null) {
+            product.getTags().add(tag);
+        }
+
+        // Actualizar descripción si es proporcionada
+        if (description != null) {
+            product.setDescriptionProducto(description);
+        }
+        
+        // Guardar cambios en el repositorio
         productRepository.save(product);
+
+        // Devolver el producto actualizado
+        return productDao.findById(productId);
+    }
+
+
+    @Override
+    public ProductDto removeImageFromProduct(Long productId, Long ImageId){
+        Product product = productRepository.findById(productId)
+                .orElseThrow(() -> new RuntimeException("Product not found"));
+        ProductImage productImage = productImagesRepository.findById(ImageId)
+                .orElseThrow(() -> new RuntimeException("Image not found"));
+        product.getImages().remove(productImage);
+        productRepository.save(product);
+        productImagesRepository.delete(productImage);
         return productDao.findById(productId);
     }
 

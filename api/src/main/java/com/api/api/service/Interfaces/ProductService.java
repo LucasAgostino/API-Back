@@ -17,8 +17,6 @@ public interface ProductService {
     
     public ProductDto softDeleteProduct(Long productId);
 
-    public ProductDto updateProductStock(Long productId, int quantity);
-
     public List<ProductDto> getAllProducts();
 
     public Optional<ProductDto> findById(Long productId);
@@ -27,9 +25,9 @@ public interface ProductService {
     
     public List<ProductDto> findByPriceRange(float minPrice, float maxPrice);
 
-    public ProductDto updateProductDiscount(Long productId, float discountPercentage);
+    public ProductDto updateProduct(Long productId, Integer stock, Float discountPercentage, Float price, String name, Tag tag, String description);
 
-    public ProductDto addTagToProduct(Long productId, Tag tag);
-
+    public ProductDto removeImageFromProduct(Long productId, Long ImageId);
+    
     public ProductDto removeTagFromProduct(Long productId, Tag tag);
 }

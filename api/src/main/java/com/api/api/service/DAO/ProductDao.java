@@ -14,7 +14,6 @@ import java.util.Base64;
 
 import com.api.api.DTO.ProductDto;
 import com.api.api.entity.Product;
-import com.api.api.entity.Tag;
 
 @Service
 public class ProductDao {

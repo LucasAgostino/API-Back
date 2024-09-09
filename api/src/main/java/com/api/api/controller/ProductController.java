@@ -52,12 +52,21 @@ public class ProductController {
     public ProductDto softDeleteProduct(@PathVariable("id") Long productId) {
         return productService.softDeleteProduct(productId);
     }
-
-    @PutMapping("/update/{id}")
-    public ProductDto updateProductStock(@PathVariable("id") Long productId, @RequestParam int stock) {
-        return productService.updateProductStock(productId, stock);
-    }
     
+    @PutMapping("/update/{productId}")
+    public ResponseEntity<ProductDto> updateProduct(
+            @PathVariable Long productId,
+            @RequestParam(required = false) Integer stock,
+            @RequestParam(required = false) Float discountPercentage,
+            @RequestParam(required = false) Float price,
+            @RequestParam(required = false) String name,
+            @RequestParam(required = false) Tag tag,
+            @RequestParam(required = false) String productDescription) {
+
+        ProductDto updatedProduct = productService.updateProduct(productId, stock, discountPercentage, price, name, tag, productDescription);
+        return ResponseEntity.ok(updatedProduct);
+    }
+
     @GetMapping("/get")
     public List<ProductDto> getAll() {
         return productService.getAllProducts();
@@ -79,22 +88,6 @@ public class ProductController {
         return productService.findByPriceRange(minPrice, maxPrice);
     }    
 
-    @PutMapping("/{productId}/discount")
-    public ResponseEntity<ProductDto> updateDiscount(
-            @PathVariable Long productId,
-            @RequestParam float discountPercentage) {
-        ProductDto updatedProduct = productService.updateProductDiscount(productId, discountPercentage);
-        return ResponseEntity.ok(updatedProduct);
-    }
-
-    @PutMapping("/{productId}/addTag")
-    public ResponseEntity<ProductDto> addTagToProduct(
-            @PathVariable Long productId, 
-            @RequestParam Tag tag) {
-
-        ProductDto updatedProduct = productService.addTagToProduct(productId, tag);
-        return ResponseEntity.ok(updatedProduct);
-    }
 
     @DeleteMapping("/{productId}/removeTag")
     public ResponseEntity<ProductDto> removeTagFromProduct(
@@ -102,6 +95,15 @@ public class ProductController {
             @RequestParam Tag tag) {
 
         ProductDto updatedProduct = productService.removeTagFromProduct(productId, tag);
+        return ResponseEntity.ok(updatedProduct);
+    }
+
+    @DeleteMapping("/{productId}/removeImage")
+    public ResponseEntity<ProductDto> removeImageFromProduct(
+            @PathVariable Long productId, 
+            @RequestParam Long imageId) {
+
+        ProductDto updatedProduct = productService.removeImageFromProduct(productId, imageId);
         return ResponseEntity.ok(updatedProduct);
     }
 
