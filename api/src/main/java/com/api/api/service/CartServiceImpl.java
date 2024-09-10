@@ -67,7 +67,9 @@ public class CartServiceImpl implements CartService {
         Cart cart = cartOpt.orElseThrow(() -> new RuntimeException("Cart not found"));
     
         CartProduct existingCartProduct = cartProductRepository.findByCartAndProduct(cart, product);
-        
+        if(product.getState() == false){
+            return "Product is not available";
+        }
         if (existingCartProduct != null) {
             int oldStock = existingCartProduct.getQuantity();
             if (!checkStock(product, oldStock + quantity)) {
