@@ -157,6 +157,7 @@ public class ProductServiceImpl implements ProductService {
         // Actualizar descuento si es proporcionado
         if (discountPercentage != null) {
             product.setDiscountPercentage(discountPercentage);
+            cartService.updatePricesInCarts(product);
         }
 
         // Actualizar precio si es proporcionado

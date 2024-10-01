@@ -17,13 +17,13 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
    @Query("SELECT p FROM Product p WHERE p.stock > 0 AND p.state = true")
    List<Product> findAllActiveProducts();
 
-   @Query("SELECT p FROM Product p WHERE p.category.id = :categoryId")
+   @Query("SELECT p FROM Product p WHERE p.category.id = :categoryId AND p.state = true")
    List<Product> findAllProductsByCategory(@Param("categoryId") Long categoryId);
    
 
    @Query("SELECT p FROM Product p WHERE " +
            "(:minPrice IS NULL OR p.price >= :minPrice) AND " +
-           "(:maxPrice IS NULL OR p.price <= :maxPrice)")
+           "(:maxPrice IS NULL OR p.price <= :maxPrice) AND p.state = true")
    List<Product> findProductsByPriceRange(@Param("minPrice") float minPrice, 
                                            @Param("maxPrice") float maxPrice);
 
