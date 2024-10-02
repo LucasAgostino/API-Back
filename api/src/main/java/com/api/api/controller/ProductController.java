@@ -77,6 +77,11 @@ public class ProductController {
         return productService.findById(productId);
     }
 
+    @GetMapping("/get/tags")
+    public Set<Tag> getTags() {
+        return productService.getAllTags();
+    }
+
     @GetMapping("/get/cat/{category}")
     public List<ProductDto> getByCategory(@PathVariable("category") Long categoryId) {
         return productService.getProductsByCategory(categoryId);

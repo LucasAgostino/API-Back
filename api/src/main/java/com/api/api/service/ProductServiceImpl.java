@@ -223,4 +223,9 @@ public class ProductServiceImpl implements ProductService {
     public List<ProductDto> findByPriceRange(float minPrice, float maxPrice) {
         return productDao.findByPriceRange(minPrice, maxPrice);
     }
+
+    @Override
+    public Set<Tag> getAllTags() {
+        return Tag.getAllTags();
+    }
 }

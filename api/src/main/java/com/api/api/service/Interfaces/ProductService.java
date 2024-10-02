@@ -30,4 +30,6 @@ public interface ProductService {
     public ProductDto removeImageFromProduct(Long productId, Long ImageId);
     
     public ProductDto removeTagFromProduct(Long productId, Tag tag);
+
+    public Set<Tag> getAllTags();
 }

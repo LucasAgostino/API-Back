@@ -1,5 +1,9 @@
 package com.api.api.entity;
 
+import java.util.Arrays;
+import java.util.Set;
+import java.util.stream.Collectors;
+
 public enum Tag {
     INTEL,
     AMD,
@@ -12,5 +16,9 @@ public enum Tag {
     MOUSES,
     MONITORES,
     WIRELESS,
-    WIRED
+    WIRED;
+    public static Set<Tag> getAllTags() {
+        return Arrays.stream(Tag.values()).collect(Collectors.toSet());
+    }
 }
+
