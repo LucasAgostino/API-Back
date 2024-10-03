@@ -1,5 +1,6 @@
 package com.api.api.controller.auth;
 
+import com.api.api.entity.Role;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.AllArgsConstructor;
@@ -15,4 +16,7 @@ public class AuthenticationResponse {
 
     @JsonProperty("access_token")
     private String accessToken;
+
+    @JsonProperty("role")
+    private Role role;  // Nuevo campo para el rol del usuario
 }

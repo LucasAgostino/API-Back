@@ -15,7 +15,6 @@ import com.api.api.DTO.ProductDto;
 import com.api.api.entity.Tag;
 import com.api.api.service.Interfaces.ProductService;
 
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -40,7 +39,7 @@ public class ProductController {
         return productService.createProduct(productName, productDescription, price, discountPercentage, stock, images, categoryId, tags);
     }
 
-    @PostMapping("/add-images")
+    @PutMapping("/add-images")
     public ProductDto addImagesToProduct(
         @RequestParam Long productId,
         @RequestParam List<MultipartFile> images) {
@@ -94,7 +93,7 @@ public class ProductController {
     }    
 
 
-    @DeleteMapping("/{productId}/removeTag")
+    @PutMapping("/{productId}/removeTag")
     public ResponseEntity<ProductDto> removeTagFromProduct(
             @PathVariable Long productId, 
             @RequestParam Tag tag) {
@@ -103,7 +102,7 @@ public class ProductController {
         return ResponseEntity.ok(updatedProduct);
     }
 
-    @DeleteMapping("/{productId}/removeImage")
+    @PutMapping("/{productId}/removeImage")
     public ResponseEntity<ProductDto> removeImageFromProduct(
             @PathVariable Long productId, 
             @RequestParam Long imageId) {
