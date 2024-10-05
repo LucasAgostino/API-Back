@@ -43,6 +43,7 @@ public class UserDAO {
         userDto.setUserName(user.getEmail());
         userDto.setFirstName(user.getFirstName());
         userDto.setSecondName(user.getSecondName());
+        userDto.setId(user.getId());
         return userDto;
     }
 }
