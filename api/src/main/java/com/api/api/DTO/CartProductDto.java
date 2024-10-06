@@ -1,5 +1,7 @@
 package com.api.api.DTO;
 
+import java.util.List;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -13,4 +15,6 @@ public class CartProductDto {
     private int quantity;
     private float totalPrice;
     private float discountPrice;
+    private List<String> imageBase64s;
+    private String categoryName;
 }

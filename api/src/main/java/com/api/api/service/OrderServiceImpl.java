@@ -6,6 +6,7 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.api.api.DTO.OrderDto;
 import com.api.api.entity.Order;
@@ -42,6 +43,7 @@ public class OrderServiceImpl implements OrderService {
         return orderDao.findByUserId(userId);
     }
 
+    @Transactional
     @Override
     public Order createOrder(Long userId, float total) {
         Optional<User> userOpt = userRepository.findById(userId);

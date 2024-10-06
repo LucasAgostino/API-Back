@@ -10,6 +10,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.sql.Blob;
+import java.sql.SQLException;
+import java.util.Base64;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -36,6 +39,19 @@ public class CartDao {
         dto.setQuantity(cartProduct.getQuantity());
         dto.setTotalPrice(cartProduct.getTotalPrice());
         dto.setDiscountPrice(cartProduct.getDiscountPrice());
+        dto.setCategoryName(cartProduct.getProduct().getCategory().getCategoryName());
+        List<String> imageBase64s = cartProduct.getProduct().getImages().stream()
+        .map(productImage -> {
+            try {
+                Blob imageBlob = productImage.getImageData();
+                byte[] imageBytes = imageBlob.getBytes(1, (int) imageBlob.length());
+                return Base64.getEncoder().encodeToString(imageBytes);
+            } catch (SQLException e) {
+                throw new RuntimeException("Error al convertir Blob a Base64", e);
+            }
+        })
+        .collect(Collectors.toList());
+        dto.setImageBase64s(imageBase64s);
         return dto;
     }
 
