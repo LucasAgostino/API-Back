@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class CartProductDto {
     private Long cartProductId;
+    private Long productId;
     private String productName;
     private int quantity;
     private float totalPrice;

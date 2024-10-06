@@ -35,6 +35,7 @@ public class CartDao {
     private CartProductDto convertToCartProductDto(CartProduct cartProduct) {
         CartProductDto dto = new CartProductDto();
         dto.setCartProductId(cartProduct.getCartProductId());
+        dto.setProductId(cartProduct.getProduct().getProductId());
         dto.setProductName(cartProduct.getProduct().getProductName());
         dto.setQuantity(cartProduct.getQuantity());
         dto.setTotalPrice(cartProduct.getTotalPrice());
