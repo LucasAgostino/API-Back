@@ -66,6 +66,7 @@ public class OrderDao {
         orderProductDto.setProductName(orderProduct.getProduct().getProductName());
         orderProductDto.setQuantity(orderProduct.getQuantity());
         orderProductDto.setTotalPrice(orderProduct.getTotalPrice());
+        orderProductDto.setPrice(orderProduct.getPrice());
         return orderProductDto;
     }
 }

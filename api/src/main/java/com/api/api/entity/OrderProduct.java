@@ -35,4 +35,7 @@ public class OrderProduct {
 
     @Column(name = "total_price", nullable = false)
     private float totalPrice;
+
+    @Column(name = "price")
+    private float price;
 }

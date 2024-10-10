@@ -8,4 +8,5 @@ public class OrderProductDto {
     private String productName;
     private Integer quantity;
     private float totalPrice;
+    private float price;
 }

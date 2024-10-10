@@ -37,6 +37,7 @@ public class OrderProductServiceImpl implements OrderProductService {
         orderProduct.setOrder(order);
         orderProduct.setProduct(product);
         orderProduct.setTotalPrice(product.getPrice() * quantity);
+        orderProduct.setPrice(product.getPrice() - product.getPrice() * product.getDiscountPercentage());
         orderProductRepository.save(orderProduct);
     }
     
