@@ -33,6 +33,7 @@ public class SecurityConfig {
                                                 .requestMatchers("/products/**").hasAnyAuthority(Role.ADMIN.name()) 
                                                 .requestMatchers(HttpMethod.POST, "/categories/**").hasAuthority(Role.ADMIN.name())
                                                 .requestMatchers("/categories/**").permitAll() // Permitir acceso a GET /categorias para todos
+                                                .requestMatchers("/user/current").authenticated()
                                                 .requestMatchers("/user/**").hasAnyAuthority(Role.ADMIN.name())
                                                 .requestMatchers("/order/admin/**").hasAnyAuthority(Role.ADMIN.name())
                                                 .anyRequest().authenticated())

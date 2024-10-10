@@ -42,4 +42,10 @@ public class UserServiceImpl implements UserService {
         User user = (User) authentication.getPrincipal(); 
         return user.getId(); // Devuelve el ID del usuario
     }
+    
+    @Override
+    public Optional<UserDto> getCurrentUserDto() {
+        Long currentUserId = getCurrentUserId();  // Llamamos al método para obtener el ID del usuario actual
+        return userDAO.findById(currentUserId);  // Buscamos el UserDto correspondiente al ID del usuario
+    }
 }

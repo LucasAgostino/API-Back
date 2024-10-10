@@ -36,6 +36,9 @@ public class UserController {
         return userService.findByEmail(email);
     }
     
-    
+    @GetMapping("/current")
+    public Optional<UserDto> getCurrentUser() {
+        return userService.getCurrentUserDto();
+    }
 }
 

@@ -11,4 +11,6 @@ public interface OrderService {
     Optional<OrderDto> findById(Long id);
     List<OrderDto> findByUserId(Long userId);
     Order createOrder(Long userId, float total);
+    Optional<OrderDto> findUserOrderById(Long orderId, Long userId);
+    Long getCurrentUserId();
 }

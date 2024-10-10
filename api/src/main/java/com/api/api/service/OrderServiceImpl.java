@@ -5,8 +5,10 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.security.core.Authentication;
 
 import com.api.api.DTO.OrderDto;
 import com.api.api.entity.Order;
@@ -53,5 +55,22 @@ public class OrderServiceImpl implements OrderService {
         order.setOrderDate(LocalDateTime.now());
         order.setOrderTotal(total);
         return orderRepository.save(order);
+    }
+
+    @Override
+    public Optional<OrderDto> findUserOrderById(Long orderId, Long userId) {
+        // Verifica si la orden pertenece al usuario
+        Optional<Order> orderOpt = orderRepository.findById(orderId);
+        if (orderOpt.isPresent() && orderOpt.get().getUser().getId().equals(userId)) {
+            return orderDao.findById(orderId); // Retorna la orden si el usuario es el dueño
+        }
+        return Optional.empty(); // Si no, retorna vacío
+    }
+
+    public Long getCurrentUserId() {
+        // Obtén el ID del usuario autenticado
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User user = (User) authentication.getPrincipal(); 
+        return user.getId();
     }
 }

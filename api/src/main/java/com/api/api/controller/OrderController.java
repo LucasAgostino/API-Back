@@ -45,5 +45,11 @@ public class OrderController {
         Long userId = userService.getCurrentUserId();
         return orderService.findByUserId(userId);
     }
+
+    @GetMapping("/myorder/{orderId}")
+    public Optional<OrderDto> getUserOrderById(@PathVariable Long orderId) {
+        Long userId = orderService.getCurrentUserId(); // Obtener el ID del usuario autenticado
+        return orderService.findUserOrderById(orderId, userId); // Verificar si la orden pertenece al usuario
+    }
     
 }
