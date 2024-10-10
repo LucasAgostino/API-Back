@@ -1,8 +1,10 @@
 package com.api.api.controller;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -28,16 +30,22 @@ public class ProductController {
     private ProductService productService;
 
     @PostMapping("/create")
-    public ProductDto createProduct(@RequestParam String productName,
-                                    @RequestParam String productDescription,
-                                    @RequestParam float price,
-                                    @RequestParam(required = false) float discountPercentage,
-                                    @RequestParam int stock,
-                                    @RequestParam(required = false) List<MultipartFile> images,
-                                    @RequestParam Long categoryId,
-                                    @RequestParam Set<Tag> tags) {
-        return productService.createProduct(productName, productDescription, price, discountPercentage, stock, images, categoryId, tags);
-    }
+public ProductDto createProduct(
+        @RequestParam String productName,
+        @RequestParam String productDescription,
+        @RequestParam float price,
+        @RequestParam(required = false) float discountPercentage,
+        @RequestParam int stock,
+        @RequestParam(required = false) List<MultipartFile> images,
+        @RequestParam Long categoryId,
+        @RequestParam List<String> tags) {
+            // Aquí puedes convertir la lista de tags a un Set de Tag si es necesario
+            Set<Tag> tagSet = tags.stream()
+                                  .map(Tag::valueOf) // Asegúrate de que Tag tiene un método adecuado para recibir el valor
+                                  .collect(Collectors.toSet());
+
+    return productService.createProduct(productName, productDescription, price, discountPercentage, stock, images, categoryId, tagSet);
+}
 
     @PutMapping("/add-images")
     public ProductDto addImagesToProduct(
