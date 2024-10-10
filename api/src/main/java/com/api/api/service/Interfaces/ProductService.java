@@ -21,10 +21,6 @@ public interface ProductService {
 
     public Optional<ProductDto> findById(Long productId);
 
-    public List<ProductDto> getProductsByCategory(Long categoryId);
-    
-    public List<ProductDto> findByPriceRange(float minPrice, float maxPrice);
-
     public ProductDto updateProduct(Long productId, Integer stock, Float discountPercentage, Float price, String name, Tag tag, String description);
 
     public ProductDto removeImageFromProduct(Long productId, Long ImageId);
@@ -32,4 +28,6 @@ public interface ProductService {
     public ProductDto removeTagFromProduct(Long productId, Tag tag);
 
     public Set<Tag> getAllTags();
+
+    public List<ProductDto> filterProducts(Float minPrice, Float maxPrice, Long categoryId, Set<Tag> tags);
 }

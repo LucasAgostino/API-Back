@@ -215,17 +215,13 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public List<ProductDto> getProductsByCategory(Long categoryId) {
-        return productDao.getProductsByCategory(categoryId);
-    }
-
-    @Override
-    public List<ProductDto> findByPriceRange(float minPrice, float maxPrice) {
-        return productDao.findByPriceRange(minPrice, maxPrice);
-    }
-
-    @Override
     public Set<Tag> getAllTags() {
         return Tag.getAllTags();
     }
+
+    @Override
+    public List<ProductDto> filterProducts(Float minPrice, Float maxPrice, Long categoryId, Set<Tag> tags) {
+        return productDao.filterProducts(minPrice, maxPrice, categoryId, tags);
+    }
+
 }

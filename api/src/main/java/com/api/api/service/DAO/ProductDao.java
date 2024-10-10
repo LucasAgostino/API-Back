@@ -9,8 +9,10 @@ import com.api.api.repository.ProductRepository;
 import java.sql.Blob;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.Base64;
+import com.api.api.entity.Tag;
 
 import com.api.api.DTO.ProductDto;
 import com.api.api.entity.Product;
@@ -34,14 +36,8 @@ public class ProductDao {
     }
 
     @Transactional(readOnly = true)
-    public List<ProductDto> findByPriceRange(Float minPrice, Float maxPrice) {
-        List<Product> products = productRepository.findProductsByPriceRange(minPrice, maxPrice);
-        return products.stream().map(this::convertToDTO).collect(Collectors.toList());
-    }
-
-    @Transactional(readOnly = true)
-    public List<ProductDto> getProductsByCategory(Long categoryId) {
-        List<Product> products = productRepository.findAllProductsByCategory(categoryId);
+    public List<ProductDto> filterProducts(Float minPrice, Float maxPrice, Long categoryId, Set<Tag> tags) {
+        List<Product> products = productRepository.findProductsByPriceCategoryAndTags(minPrice, maxPrice, categoryId, tags);
         return products.stream().map(this::convertToDTO).collect(Collectors.toList());
     }
     

@@ -29,22 +29,21 @@ public class ProductController {
     private ProductService productService;
 
     @PostMapping("/create")
-public ProductDto createProduct(
-        @RequestParam String productName,
-        @RequestParam String productDescription,
-        @RequestParam float price,
-        @RequestParam(required = false) float discountPercentage,
-        @RequestParam int stock,
-        @RequestParam(required = false) List<MultipartFile> images,
-        @RequestParam Long categoryId,
-        @RequestParam List<String> tags) {
-            // Aquí puedes convertir la lista de tags a un Set de Tag si es necesario
-            Set<Tag> tagSet = tags.stream()
-                                  .map(Tag::valueOf) // Asegúrate de que Tag tiene un método adecuado para recibir el valor
-                                  .collect(Collectors.toSet());
+    public ProductDto createProduct(
+            @RequestParam String productName,
+            @RequestParam String productDescription,
+            @RequestParam float price,
+            @RequestParam(required = false) float discountPercentage,
+            @RequestParam int stock,
+            @RequestParam(required = false) List<MultipartFile> images,
+            @RequestParam Long categoryId,
+            @RequestParam List<String> tags) {
+                Set<Tag> tagSet = tags.stream()
+                                    .map(Tag::valueOf) 
+                                    .collect(Collectors.toSet());
 
     return productService.createProduct(productName, productDescription, price, discountPercentage, stock, images, categoryId, tagSet);
-}
+    }
 
     @PutMapping("/add-images")
     public ProductDto addImagesToProduct(
@@ -88,18 +87,6 @@ public ProductDto createProduct(
         return productService.getAllTags();
     }
 
-    @GetMapping("/get/cat/{category}")
-    public List<ProductDto> getByCategory(@PathVariable("category") Long categoryId) {
-        return productService.getProductsByCategory(categoryId);
-    }
-
-    @GetMapping("/get/filter")
-    public List<ProductDto> filterProductsByPrice(@RequestParam(required = false) Float minPrice,
-                                                  @RequestParam(required = false) Float maxPrice) {
-        return productService.findByPriceRange(minPrice, maxPrice);
-    }    
-
-
     @PutMapping("/{productId}/removeTag")
     public ResponseEntity<ProductDto> removeTagFromProduct(
             @PathVariable Long productId, 
@@ -117,6 +104,26 @@ public ProductDto createProduct(
         ProductDto updatedProduct = productService.removeImageFromProduct(productId, imageId);
         return ResponseEntity.ok(updatedProduct);
     }
+
+
+    @GetMapping("/get/filter")
+    public ResponseEntity<List<ProductDto>> filterProducts(
+            @RequestParam(required = false) Float minPrice,
+            @RequestParam(required = false) Float maxPrice,
+            @RequestParam(required = false) Long categoryId,
+            @RequestParam(required = false) Set<Tag> tags) {
+
+        List<ProductDto> filteredProducts = productService.filterProducts(
+                Optional.ofNullable(minPrice).orElse(null), 
+                Optional.ofNullable(maxPrice).orElse(null), 
+                Optional.ofNullable(categoryId).orElse(null), 
+                tags
+        );
+
+        return ResponseEntity.ok(filteredProducts);
+    }
+
+    
 
 
 }
