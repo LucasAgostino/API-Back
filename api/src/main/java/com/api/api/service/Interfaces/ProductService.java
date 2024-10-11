@@ -30,4 +30,6 @@ public interface ProductService {
     public Set<Tag> getAllTags();
 
     public List<ProductDto> filterProducts(Float minPrice, Float maxPrice, Long categoryId, Set<Tag> tags);
+
+    public List<ProductDto> findByProductName(String productName);
 }

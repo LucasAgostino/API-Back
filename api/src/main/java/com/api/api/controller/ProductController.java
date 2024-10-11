@@ -123,6 +123,10 @@ public class ProductController {
         return ResponseEntity.ok(filteredProducts);
     }
 
+    @GetMapping("/search")
+    public List<ProductDto> searchProductsByName(@RequestParam("name") String name) {
+        return productService.findByProductName(name);
+    }
     
 
 

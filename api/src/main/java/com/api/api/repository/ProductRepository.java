@@ -16,6 +16,10 @@ import org.springframework.data.repository.query.Param;
 @Repository
 public interface ProductRepository extends JpaRepository<Product, Long> {
 
+    @Query("SELECT p FROM Product p WHERE LOWER(p.productName) LIKE LOWER(CONCAT('%', :name, '%')) AND p.state = true")
+    List<Product> findByProductNameContainingIgnoreCase(@Param("name") String productName);
+
+
    @Query("SELECT p FROM Product p WHERE p.stock > 0 AND p.state = true")
    List<Product> findAllActiveProducts();
 

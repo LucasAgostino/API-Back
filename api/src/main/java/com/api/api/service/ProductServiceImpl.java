@@ -224,4 +224,18 @@ public class ProductServiceImpl implements ProductService {
         return productDao.filterProducts(minPrice, maxPrice, categoryId, tags);
     }
 
+    @Override
+    public List<ProductDto> findByProductName(String productName) {
+        List<Product> products = productRepository.findByProductNameContainingIgnoreCase(productName);
+        
+        // Convertir a DTO antes de devolver
+        List<ProductDto> productDtos = new ArrayList<>();
+        for (Product product : products) {
+            productDtos.add(productDao.findById(product.getProductId()));
+        }
+        
+        return productDtos;
+    }
+
+
 }
