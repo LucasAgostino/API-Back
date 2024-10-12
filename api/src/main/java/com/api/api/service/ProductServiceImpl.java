@@ -145,7 +145,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public ProductDto updateProduct(Long productId, Integer stock, Float discountPercentage, Float price, String name, Tag tag, String description) {
+    public ProductDto updateProduct(Long productId, Integer stock, Float discountPercentage, Float price, String name, Tag tag, String description, Long categoryId) {
         Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new RuntimeException("Product not found"));
 
@@ -182,6 +182,12 @@ public class ProductServiceImpl implements ProductService {
         // Actualizar descripción si es proporcionada
         if (description != null) {
             product.setDescriptionProducto(description);
+        }
+
+        if (categoryId != null) {
+            Category category = categoryRepository.findById(categoryId)
+                .orElseThrow(() -> new RuntimeException("Category not found"));
+            product.setCategory(category);
         }
         
         // Guardar cambios en el repositorio

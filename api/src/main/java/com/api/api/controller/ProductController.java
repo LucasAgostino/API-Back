@@ -66,9 +66,10 @@ public class ProductController {
             @RequestParam(required = false) Float price,
             @RequestParam(required = false) String name,
             @RequestParam(required = false) Tag tag,
-            @RequestParam(required = false) String productDescription) {
+            @RequestParam(required = false) String productDescription,
+            @RequestParam(required = false) Long categoryId) {
 
-        ProductDto updatedProduct = productService.updateProduct(productId, stock, discountPercentage, price, name, tag, productDescription);
+        ProductDto updatedProduct = productService.updateProduct(productId, stock, discountPercentage, price, name, tag, productDescription, categoryId);
         return ResponseEntity.ok(updatedProduct);
     }
 
