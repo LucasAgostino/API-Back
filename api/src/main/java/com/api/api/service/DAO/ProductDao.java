@@ -16,6 +16,7 @@ import com.api.api.entity.Tag;
 
 import com.api.api.DTO.ProductDto;
 import com.api.api.entity.Product;
+import com.api.api.entity.ProductImage;
 
 @Service
 public class ProductDao {
@@ -47,6 +48,8 @@ public class ProductDao {
     dto.setProductName(product.getProductName());
     dto.setPrice(product.getPrice());
     dto.setDiscountPercentage(product.getDiscountPercentage());
+    
+    // Lista para almacenar los base64 de las imágenes
     List<String> imageBase64s = product.getImages().stream()
         .map(productImage -> {
             try {
@@ -58,15 +61,23 @@ public class ProductDao {
             }
         })
         .collect(Collectors.toList());
-    dto.setImageBase64s(imageBase64s);
+    
+    // Lista para almacenar los imageId correspondientes
+    List<Long> imageIds = product.getImages().stream()
+        .map(ProductImage::getImageId) // Suponiendo que ProductImage tiene un método getImageId()
+        .collect(Collectors.toList());
+    
+    // Asignamos las listas paralelas
+    dto.setImageBase64s(imageBase64s);  // Seteamos los base64
+    dto.setImageid(imageIds);          // Seteamos los IDs de las imágenes
+    
     dto.setCategoryName(product.getCategory().getCategoryName());
     dto.setStock(product.getStock());
     dto.setActive(product.getState());
     dto.setProductDescription(product.getDescriptionProducto());
     dto.setTags(product.getTags());
+    
     return dto;
 }
-
-    
 
 }

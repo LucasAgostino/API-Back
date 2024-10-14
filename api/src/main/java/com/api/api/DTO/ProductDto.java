@@ -17,6 +17,7 @@ public class ProductDto {
     private String productName;
     private float price;
     private float discountPercentage;
+    private List<Long> imageid;
     private List<String> imageBase64s;
     private String productDescription;
     private int stock;

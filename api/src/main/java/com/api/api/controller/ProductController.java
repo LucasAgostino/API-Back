@@ -97,10 +97,10 @@ public class ProductController {
         return ResponseEntity.ok(updatedProduct);
     }
 
-    @PutMapping("/{productId}/removeImage")
+    @PutMapping("/{productId}/removeImage/{imageId}")
     public ResponseEntity<ProductDto> removeImageFromProduct(
             @PathVariable Long productId, 
-            @RequestParam Long imageId) {
+            @PathVariable Long imageId) {
 
         ProductDto updatedProduct = productService.removeImageFromProduct(productId, imageId);
         return ResponseEntity.ok(updatedProduct);
