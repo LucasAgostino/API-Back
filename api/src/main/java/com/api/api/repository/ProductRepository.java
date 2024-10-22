@@ -31,7 +31,8 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
        "AND (:maxPrice IS NULL OR p.price <= :maxPrice) " +
        "AND (:categoryId IS NULL OR p.category.id = :categoryId) " +
        "AND p.state = true " +
-       "AND (:tags IS NULL OR t IN :tags)")
+       "AND (:tags IS NULL OR t IN :tags)"+
+       "AND p.stock > 0")
 List<Product> findProductsByPriceCategoryAndTags(@Param("minPrice") Float minPrice,
                                                   @Param("maxPrice") Float maxPrice,
                                                   @Param("categoryId") Long categoryId,
