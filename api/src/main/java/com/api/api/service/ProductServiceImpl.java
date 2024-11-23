@@ -205,7 +205,6 @@ public class ProductServiceImpl implements ProductService {
         ProductImage productImage = productImagesRepository.findById(ImageId)
                 .orElseThrow(() -> new RuntimeException("Image not found"));
         product.getImages().remove(productImage);
-        productRepository.save(product);
         productImagesRepository.delete(productImage);
         return productDao.findById(productId);
     }
