@@ -21,7 +21,7 @@ public interface ProductService {
 
     public Optional<ProductDto> findById(Long productId);
 
-    public ProductDto updateProduct(Long productId, Integer stock, Float discountPercentage, Float price, String name, Tag tag, String description, Long categoryId);
+    public ProductDto updateProduct(Long productId, Integer stock, Float discountPercentage, Float price, String name, Set<Tag>tag, String description, Long categoryId);
 
     public ProductDto removeImageFromProduct(Long productId, Long ImageId);
     

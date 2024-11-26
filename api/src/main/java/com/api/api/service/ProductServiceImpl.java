@@ -10,6 +10,7 @@ import java.util.Set;
 import javax.sql.rowset.serial.SerialBlob;
 
 import java.util.ArrayList; // Add this import statement
+import java.util.HashSet;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -145,7 +146,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public ProductDto updateProduct(Long productId, Integer stock, Float discountPercentage, Float price, String name, Tag tag, String description, Long categoryId) {
+    public ProductDto updateProduct(Long productId, Integer stock, Float discountPercentage, Float price, String name, Set<Tag> tag, String description, Long categoryId) {
         Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new RuntimeException("Product not found"));
 
@@ -175,9 +176,12 @@ public class ProductServiceImpl implements ProductService {
         }
 
         // Agregar tag si es proporcionado
-        if (tag != null) {
-            product.getTags().add(tag);
-        }
+if (tag != null) {
+    // Reemplazar las etiquetas del producto con la nueva lista
+    product.setTags(new HashSet<>(tag)); // Asumiendo que product.getTags() devuelve un Set<Tag>
+}
+
+
 
         // Actualizar descripción si es proporcionada
         if (description != null) {

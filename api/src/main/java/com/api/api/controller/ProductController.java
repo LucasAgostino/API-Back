@@ -60,18 +60,22 @@ public class ProductController {
     
     @PutMapping("/update/{productId}")
     public ResponseEntity<ProductDto> updateProduct(
-            @PathVariable Long productId,
-            @RequestParam(required = false) Integer stock,
-            @RequestParam(required = false) Float discountPercentage,
-            @RequestParam(required = false) Float price,
-            @RequestParam(required = false) String name,
-            @RequestParam(required = false) Tag tag,
-            @RequestParam(required = false) String productDescription,
-            @RequestParam(required = false) Long categoryId) {
+        @PathVariable Long productId,
+        @RequestParam(required = false) Integer stock,
+        @RequestParam(required = false) Float discountPercentage,
+        @RequestParam(required = false) Float price,
+        @RequestParam(required = false) String name,
+        @RequestParam(required = false) List<String> tags, // Cambiado a List<String>
+        @RequestParam(required = false) String productDescription,
+        @RequestParam(required = false) Long categoryId) {
 
-        ProductDto updatedProduct = productService.updateProduct(productId, stock, discountPercentage, price, name, tag, productDescription, categoryId);
-        return ResponseEntity.ok(updatedProduct);
-    }
+    Set<Tag> tagSet = tags.stream()
+                          .map(Tag::valueOf) // Conversión de String a Tag
+                          .collect(Collectors.toSet());
+
+    ProductDto updatedProduct = productService.updateProduct(productId, stock, discountPercentage, price, name, tagSet, productDescription, categoryId);
+    return ResponseEntity.ok(updatedProduct);
+}
 
     @GetMapping("/get")
     public List<ProductDto> getAll() {
